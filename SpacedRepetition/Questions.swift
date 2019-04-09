@@ -19,7 +19,7 @@ class Questions {
 
         if let savedQuestions = defaults.object(forKey: "questions") as? Data {
             if let decodedQuestions = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(savedQuestions) as? [Question] {
-                questions = decodedQuestions
+                questions = decodedQuestions ?? [Question]()
             }
         }
     }
