@@ -16,8 +16,8 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "SpacedRepetition"
-  s.version      = "0.0.1"
-  s.summary      = "A short description of SpacedRepetition."
+  s.version      = "0.0.2"
+  s.summary      = "Implementing the concept of Spaced Repetition. Provides storage and incrementing for correct and incorrect answers."
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
