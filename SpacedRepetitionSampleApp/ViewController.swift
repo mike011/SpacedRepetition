@@ -45,7 +45,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        questions.load(questions: testQuestions)
+        questions.add(questions: testQuestions)
         setNextQuestion()
     }
 
@@ -76,7 +76,7 @@ class ViewController: UIViewController {
             return
         }
 
-        questionNumber.text = currentQuestion.question
+        questionNumber.text = currentQuestion.title
 
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM dd, yyyy"

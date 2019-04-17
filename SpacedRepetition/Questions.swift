@@ -9,56 +9,62 @@
 import Foundation
 
 /// Manages everything to do with questions
-class Questions {
+public class Questions {
 
-    private var questions = [Question]()
+    public var questionData = [Question]()
     private var currentQuestionIndex = 0
 
-    init() {
-        let defaults = UserDefaults.standard
+    public init() {
+        loadQuestions()
+    }
 
+    func loadQuestions() {
+        let defaults = UserDefaults.standard
         if let savedQuestions = defaults.object(forKey: "questions") as? Data {
             if let decodedQuestions = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(savedQuestions) as? [Question] {
-                questions = decodedQuestions ?? [Question]()
+                questionData = decodedQuestions
             }
         }
     }
 
-    func load(questions loadedQuestions: [String]) {
-        if questions.isEmpty {
-            for test in loadedQuestions {
-                questions.append(Question(withTitle: test))
+    /// If you've never added questions, this is the function to call to add them.
+    public func add(questions titles: [String]) {
+        if questionData.isEmpty {
+            for title in titles {
+                questionData.append(Question(withTitle: title))
             }
         }
     }
 
-    func correctAnswer() {
-        questions[currentQuestionIndex].handleRightAnswer()
+    public func correctAnswer() {
+        questionData[currentQuestionIndex].handleRightAnswer()
         save()
-        questions.remove(at: currentQuestionIndex)
+
+        // This is removing it from the user defaults!!!
+        questionData.remove(at: currentQuestionIndex)
     }
 
-    func wrongAnswer() {
-        questions[currentQuestionIndex].handleWrongAnswer()
+    public func wrongAnswer() {
+        questionData[currentQuestionIndex].handleWrongAnswer()
         save()
     }
 
-    func getNextQuestion() -> Question? {
+    public func getNextQuestion() -> Question? {
 
-        guard questions.count > 0 else {
+        guard questionData.count > 0 else {
             return nil
         }
 
         var newIndex = currentQuestionIndex
-        while newIndex == currentQuestionIndex && questions.count != 1 {
-            newIndex = Int.random(in: 0 ..< questions.count)
+        while newIndex == currentQuestionIndex && questionData.count != 1 {
+            newIndex = Int.random(in: 0 ..< questionData.count)
         }
         currentQuestionIndex = newIndex
-        return questions[currentQuestionIndex]
+        return questionData[currentQuestionIndex]
     }
 
     func save() {
-        if let savedData = try? NSKeyedArchiver.archivedData(withRootObject: questions, requiringSecureCoding: false) {
+        if let savedData = try? NSKeyedArchiver.archivedData(withRootObject: questionData, requiringSecureCoding: false) {
             let defaults = UserDefaults.standard
             defaults.set(savedData, forKey: "questions")
         }
