@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description  = "provides a framework to add spaced repetition to questions"
 
-  s.homepage     = "http://EXAMPLE/SpacedRepetition"
+  s.homepage     = "https://github.com/mike011/SpacedRepetition"
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
@@ -54,7 +54,7 @@ Pod::Spec.new do |s|
   s.author             = { "mike011" => "mike_ch_1@hotmail.com" }
   # Or just: s.author    = "mike011"
   # s.authors            = { "mike011" => "mike_ch_1@hotmail.com" }
-  # s.social_media_url   = "http://twitter.com/mike011"
+  s.social_media_url   = "http://twitter.com/mike011"
 
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #

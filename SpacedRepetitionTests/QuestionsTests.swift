@@ -64,6 +64,15 @@ class QuestionsTests: XCTestCase {
         XCTAssertEqual(qs2.questionData.count, 1)
     }
 
+    func testWrongAnswerWithNoMoreQuestionsAvailable() {
+        let qs = Questions()
+        qs.add(questions: ["one"])
+        qs.correctAnswer()
+
+        // should not crash
+        qs.wrongAnswer()
+    }
+
     func testCorrectAnswer() {
         let qs = Questions()
         qs.add(questions: ["one"])
@@ -76,6 +85,15 @@ class QuestionsTests: XCTestCase {
         let q2 = qs2.allQuestionData[0]
         XCTAssertEqual(q2.timesCorrect, 1)
         XCTAssertNotNil(q2)
+    }
+
+    func testCorrectAnswerWithNoMoreQuestionsAvailable() {
+        let qs = Questions()
+        qs.add(questions: ["one"])
+        qs.correctAnswer()
+
+        // should not crash
+        qs.correctAnswer()
     }
 
     func testNoQuestionsShouldBeShownIfAllQuestionsAreForFutureDates() {

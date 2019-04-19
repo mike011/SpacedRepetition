@@ -25,7 +25,7 @@ public class Questions {
         let defaults = UserDefaults.standard
         if let savedQuestions = defaults.object(forKey: "questions") as? Data {
             if let decodedQuestions = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(savedQuestions) as? [Question] {
-                allQuestionData = decodedQuestions
+                allQuestionData = decodedQuestions ?? [Question]()
             }
         }
         loadQuestions()
@@ -56,15 +56,22 @@ public class Questions {
     }
 
     public func correctAnswer() {
+        guard currentQuestionIndex > -1 else {
+            return
+        }
+
         questionData[currentQuestionIndex].handleRightAnswer()
 
         questionData.remove(at: currentQuestionIndex)
         currentQuestionIndex = -1
-
         save()
     }
 
     public func wrongAnswer() {
+        guard currentQuestionIndex > -1 else {
+            return
+        }
+
         questionData[currentQuestionIndex].handleWrongAnswer()
         save()
     }
