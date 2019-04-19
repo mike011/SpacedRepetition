@@ -12,7 +12,7 @@ import Foundation
 public class Questions {
 
     public var questionData = [Question]()
-    internal var allQuestionData = [Question]()
+    public var allQuestionData = [Question]()
     private var currentQuestionIndex = 0
 
     public init() {
@@ -56,7 +56,7 @@ public class Questions {
     }
 
     public func correctAnswer() {
-        guard currentQuestionIndex > -1 else {
+        guard questionData.count > 0 else {
             return
         }
 
@@ -68,7 +68,7 @@ public class Questions {
     }
 
     public func wrongAnswer() {
-        guard currentQuestionIndex > -1 else {
+        guard questionData.count > 0 else {
             return
         }
 
@@ -82,9 +82,12 @@ public class Questions {
             return nil
         }
 
-        var newIndex = currentQuestionIndex
-        while newIndex == currentQuestionIndex && questionData.count != 1 {
-            newIndex = Int.random(in: 0 ..< questionData.count)
+        var newIndex = 0
+        if questionData.count > 1 {
+            newIndex = currentQuestionIndex
+            while newIndex == currentQuestionIndex {
+                newIndex = Int.random(in: 0 ..< questionData.count)
+            }
         }
         currentQuestionIndex = newIndex
         return questionData[currentQuestionIndex]

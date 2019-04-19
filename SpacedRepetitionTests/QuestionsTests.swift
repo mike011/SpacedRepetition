@@ -64,6 +64,13 @@ class QuestionsTests: XCTestCase {
         XCTAssertEqual(qs2.questionData.count, 1)
     }
 
+    func testNoQuestionLoaded() {
+        let qs = Questions()
+        qs.wrongAnswer()
+        qs.correctAnswer()
+        _ = qs.getNextQuestion()
+    }
+
     func testWrongAnswerWithNoMoreQuestionsAvailable() {
         let qs = Questions()
         qs.add(questions: ["one"])
@@ -82,6 +89,7 @@ class QuestionsTests: XCTestCase {
         XCTAssertNil(q)
 
         let qs2 = Questions()
+        XCTAssertFalse(qs2.allQuestionData.isEmpty)
         let q2 = qs2.allQuestionData[0]
         XCTAssertEqual(q2.timesCorrect, 1)
         XCTAssertNotNil(q2)
