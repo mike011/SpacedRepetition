@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// Manages everything to do with questions
+/// Manages everything to do with questions.
 public class Questions {
 
     public var questionData = [Question]()
@@ -18,7 +18,8 @@ public class Questions {
         loadQuestions()
     }
 
-    func loadQuestions() {
+    // Hardcoded to using user defaults.
+    private func loadQuestions() {
         let defaults = UserDefaults.standard
         if let savedQuestions = defaults.object(forKey: "questions") as? Data {
             if let decodedQuestions = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(savedQuestions) as? [Question] {
@@ -38,10 +39,12 @@ public class Questions {
 
     public func correctAnswer() {
         questionData[currentQuestionIndex].handleRightAnswer()
-        save()
+
 
         // This is removing it from the user defaults!!!
         questionData.remove(at: currentQuestionIndex)
+
+        save()
     }
 
     public func wrongAnswer() {

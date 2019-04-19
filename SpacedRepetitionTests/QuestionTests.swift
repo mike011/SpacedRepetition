@@ -1,5 +1,5 @@
 //
-//  QuestionTest.swift
+//  QuestionTests.swift
 //  SpacedRepetitionTests
 //
 //  Created by Michael Charland on 2019-04-14.
@@ -9,7 +9,7 @@
 import XCTest
 @testable import SpacedRepetition
 
-class QuestionTest: XCTestCase {
+class QuestionTests: XCTestCase {
 
     func testInitValues() {
         let q = Question(withTitle: "title")
