@@ -34,7 +34,7 @@ class QuestionTests: XCTestCase {
         }
 
         override open func decodeObject(forKey key: String) -> Any? {
-            return vals[key]
+            return vals[key] ?? nil
         }
     }
 

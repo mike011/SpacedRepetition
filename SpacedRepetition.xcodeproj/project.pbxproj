@@ -19,6 +19,7 @@
 		4C0C1CB7223A5DDD00B9CF54 /* SpacedRepetitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0C1CB6223A5DDD00B9CF54 /* SpacedRepetitionTests.swift */; };
 		4C0C1CBF223A5DFB00B9CF54 /* SpacedRepetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0C1CBE223A5DFB00B9CF54 /* SpacedRepetition.swift */; };
 		4C61E8CB22672ED800F95EA9 /* QuestionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C61E8CA22672ED800F95EA9 /* QuestionsTests.swift */; };
+		4C61E8CD2269D81A00F95EA9 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 4C61E8CC2269D81900F95EA9 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		4C0C1CB8223A5DDD00B9CF54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4C0C1CBE223A5DFB00B9CF54 /* SpacedRepetition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacedRepetition.swift; sourceTree = "<group>"; };
 		4C61E8CA22672ED800F95EA9 /* QuestionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionsTests.swift; sourceTree = "<group>"; };
+		4C61E8CC2269D81900F95EA9 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 		4C0C1C8F223A5D2E00B9CF54 = {
 			isa = PBXGroup;
 			children = (
+				4C61E8CC2269D81900F95EA9 /* README.md */,
 				4C09F99A225CB2B200A77AD7 /* SpacedRepetition.podspec */,
 				4C09F997225CA6ED00A77AD7 /* SpacedRepetition */,
 				4C0C1C9A223A5D2E00B9CF54 /* SpacedRepetitionSampleApp */,
@@ -207,6 +210,7 @@
 			files = (
 				4C0C1CA9223A5D2F00B9CF54 /* LaunchScreen.storyboard in Resources */,
 				4C0C1CA6223A5D2F00B9CF54 /* Assets.xcassets in Resources */,
+				4C61E8CD2269D81A00F95EA9 /* README.md in Resources */,
 				4C0C1CA1223A5D2E00B9CF54 /* Main.storyboard in Resources */,
 				4C09F99B225CB2B200A77AD7 /* SpacedRepetition.podspec in Resources */,
 			);

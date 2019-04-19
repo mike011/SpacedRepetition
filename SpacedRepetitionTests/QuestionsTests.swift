@@ -48,10 +48,7 @@ class QuestionsTests: XCTestCase {
         qs.save()
 
         let qs2 = Questions()
-
-        let q = qs2.getNextQuestion()
-        XCTAssertNotNil(q)
-        XCTAssertEqual(q, qs2.getNextQuestion())
+        XCTAssertEqual(qs2.questionData.count, 1)
     }
 
     func testWrongAnswer() {
@@ -64,8 +61,7 @@ class QuestionsTests: XCTestCase {
         XCTAssertEqual(q?.timesCorrect, 0)
 
         let qs2 = Questions()
-        let q2 = qs2.getNextQuestion()
-        XCTAssertNotNil(q2)
+        XCTAssertEqual(qs2.questionData.count, 1)
     }
 
     func testCorrectAnswer() {
@@ -77,8 +73,20 @@ class QuestionsTests: XCTestCase {
         XCTAssertNil(q)
 
         let qs2 = Questions()
-        let q2 = qs2.getNextQuestion()
-        XCTAssertEqual(q2?.timesCorrect, 1)
+        let q2 = qs2.allQuestionData[0]
+        XCTAssertEqual(q2.timesCorrect, 1)
         XCTAssertNotNil(q2)
+    }
+
+    func testNoQuestionsShouldBeShownIfAllQuestionsAreForFutureDates() {
+
+        // By marking a question correct it's next date to show will be at a later date.
+        let qs = Questions()
+        qs.add(questions: ["one"])
+        qs.correctAnswer()
+
+        let qs2 = Questions()
+        let q = qs2.getNextQuestion()
+        XCTAssertNil(q)
     }
 }

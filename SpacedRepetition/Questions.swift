@@ -12,37 +12,54 @@ import Foundation
 public class Questions {
 
     public var questionData = [Question]()
+    internal var allQuestionData = [Question]()
     private var currentQuestionIndex = 0
 
     public init() {
-        loadQuestions()
+        loadAllQuestions()
     }
 
-    // Hardcoded to using user defaults.
-    private func loadQuestions() {
+    /// Loads all the stored questions.
+    private func loadAllQuestions() {
+        // Hardcoded to using user defaults.
         let defaults = UserDefaults.standard
         if let savedQuestions = defaults.object(forKey: "questions") as? Data {
             if let decodedQuestions = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(savedQuestions) as? [Question] {
-                questionData = decodedQuestions
+                allQuestionData = decodedQuestions
             }
         }
+        loadQuestions()
     }
 
     /// If you've never added questions, this is the function to call to add them.
     public func add(questions titles: [String]) {
-        if questionData.isEmpty {
+        if allQuestionData.isEmpty {
             for title in titles {
-                questionData.append(Question(withTitle: title))
+                allQuestionData.append(Question(withTitle: title))
             }
+        }
+        loadQuestions()
+    }
+
+    /// Loads only the questions needed for the day.
+    func loadQuestions() {
+        questionData = allQuestionData.filter { (q) -> Bool in
+
+            // You've never answered the question
+            guard let next = q.nextTimeToAsk else {
+                return true
+            }
+
+            // The question should be asked today
+            return next.compare(Date()) == ComparisonResult.orderedAscending
         }
     }
 
     public func correctAnswer() {
         questionData[currentQuestionIndex].handleRightAnswer()
 
-
-        // This is removing it from the user defaults!!!
         questionData.remove(at: currentQuestionIndex)
+        currentQuestionIndex = -1
 
         save()
     }
@@ -67,7 +84,7 @@ public class Questions {
     }
 
     func save() {
-        if let savedData = try? NSKeyedArchiver.archivedData(withRootObject: questionData, requiringSecureCoding: false) {
+        if let savedData = try? NSKeyedArchiver.archivedData(withRootObject: allQuestionData, requiringSecureCoding: false) {
             let defaults = UserDefaults.standard
             defaults.set(savedData, forKey: "questions")
         }
