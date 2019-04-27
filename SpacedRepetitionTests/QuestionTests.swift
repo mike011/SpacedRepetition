@@ -13,9 +13,10 @@ class QuestionTests: XCTestCase {
 
     // MARK: - init
     func testInitValues() {
-        let q = Question(withTitle: "title")
+        let q = Question(withTitle: "title", andCategory: "c")
         XCTAssertEqual(q.incrementAmount, 0)
         XCTAssertEqual(q.title, "title")
+        XCTAssertEqual(q.category, "c")
         XCTAssertEqual(q.timesAsked, 0)
         XCTAssertEqual(q.incrementAmount, 0)
         XCTAssertEqual(q.timesCorrect, 0)
@@ -88,11 +89,13 @@ class QuestionTests: XCTestCase {
     func testCoderInitValues() {
 
         let coder = MyCoder()
-        coder.encode("title", forKey: "title")
+        coder.encode("t", forKey: "title")
+        coder.encode("cat", forKey: "category")
 
         let q = Question(coder: coder)
         XCTAssertEqual(q.incrementAmount, 0)
-        XCTAssertEqual(q.title, "title")
+        XCTAssertEqual(q.title, "t")
+        XCTAssertEqual(q.category, "cat")
         XCTAssertEqual(q.timesAsked, 0)
         XCTAssertEqual(q.incrementAmount, 0)
         XCTAssertEqual(q.timesCorrect, 0)
@@ -101,12 +104,15 @@ class QuestionTests: XCTestCase {
     func testEncoder() {
 
         let coder = MyCoder()
-        coder.encode("title", forKey: "title")
+        coder.encode("t", forKey: "title")
+        coder.encode("cat", forKey: "category")
+
         let q = Question(coder: coder)
 
         let coder2 = MyCoder()
         q.encode(with: coder2)
-        XCTAssertEqual("title", coder2.decodeObject(forKey: "title") as! String)
+        XCTAssertEqual("t", coder2.decodeObject(forKey: "title") as! String)
+        XCTAssertEqual("cat", coder2.decodeObject(forKey: "category") as! String)
     }
 
     // MARK: - right answer

@@ -14,6 +14,9 @@ public class Question: NSObject, NSCoding, Comparable {
     /// What is the question?
     public var title: String
 
+    /// What is the category the question exists in?
+    public var category: String?
+
     /// When was this question last answered correctly?
     public var lastTimeAnswered: Date?
 
@@ -34,6 +37,7 @@ public class Question: NSObject, NSCoding, Comparable {
 
     enum Key: String {
         case title
+        case category
         case lastTimeAnswered
         case timesAsked
         case timesCorrect
@@ -41,9 +45,10 @@ public class Question: NSObject, NSCoding, Comparable {
         case nextTimeToAsk
     }
 
-    init(withTitle: String) {
+    init(withTitle: String, andCategory: String? = nil) {
         incrementAmount = 0
         title = withTitle
+        category = andCategory
         timesAsked = 0
         timesCorrect = 0
         spacedRepetition = SpacedRepetition(currentIncrementAmount: incrementAmount)
@@ -51,6 +56,7 @@ public class Question: NSObject, NSCoding, Comparable {
 
     public required init(coder aDecoder: NSCoder) {
         title = aDecoder.decodeObject(forKey: .title) as? String ?? ""
+        category = aDecoder.decodeObject(forKey: .category) as? String ?? nil
         lastTimeAnswered = aDecoder.decodeObject(forKey: .lastTimeAnswered) as? Date ?? nil
         timesAsked = aDecoder.decodeObject(forKey: .timesAsked) as? Int ?? 0
         timesCorrect = aDecoder.decodeObject(forKey: .timesCorrect) as? Int ?? 0
@@ -61,7 +67,8 @@ public class Question: NSObject, NSCoding, Comparable {
     }
 
     public func encode(with aCoder: NSCoder) {
-        aCoder.encode(title, forKey: Key.title)
+        aCoder.encode(title, forKey: .title)
+        aCoder.encode(category, forKey: .category)
         aCoder.encode(lastTimeAnswered, forKey: .lastTimeAnswered)
         aCoder.encode(timesAsked, forKey: .timesAsked)
         aCoder.encode(timesCorrect, forKey: .timesCorrect)

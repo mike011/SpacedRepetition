@@ -45,7 +45,10 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        questions.add(questions: testQuestions)
+
+        // We'll just use the app name for the category name for the sample app.
+        questions.add(questions: testQuestions, category: "SampleApp")
+
         setNextQuestion()
     }
 

@@ -14,29 +14,36 @@ public class Questions {
     public var questionData = [Question]()
     public var allQuestionData = [Question]()
     private var currentQuestionIndex = 0
+    private var loadedQuestions = false
 
-    public init() {
-        loadAllQuestions()
+    public init(forCategory category: String? = nil) {
+        loadAllQuestions(forCategory: category)
     }
 
     /// Loads all the stored questions.
-    private func loadAllQuestions() {
+    private func loadAllQuestions(forCategory category: String?) {
         // Hardcoded to using user defaults.
         let defaults = UserDefaults.standard
         if let savedQuestions = defaults.object(forKey: "questions") as? Data {
             if var decodedQuestions = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(savedQuestions) as! [Question] {
                 decodedQuestions.sort()
-                allQuestionData = decodedQuestions
+                allQuestionData = decodedQuestions.filter({
+                    if category == nil {
+                        return true
+                    }
+                    return $0.category == category
+                })
+                loadedQuestions = true
             }
         }
         loadQuestions()
     }
 
     /// If you've never added questions, this is the function to call to add them.
-    public func add(questions titles: [String]) {
-        if allQuestionData.isEmpty {
+    public func add(questions titles: [String], category: String? = nil) {
+        if !loadedQuestions {
             for title in titles {
-                allQuestionData.append(Question(withTitle: title))
+                allQuestionData.append(Question(withTitle: title, andCategory: category))
             }
         }
         loadQuestions()

@@ -16,6 +16,27 @@ class QuestionsTests: XCTestCase {
         defaults.removeObject(forKey: "questions")
     }
 
+    // MARK: - init
+    func testInitAllQuestions() {
+        let qs = Questions()
+        qs.add(questions: ["one"], category: "c")
+        qs.add(questions: ["two"], category: "d")
+        qs.save()
+
+        let qs2 = Questions()
+        XCTAssertEqual(qs2.questionData.count, 2)
+    }
+
+    func testInitOnlySpecifiedCategory() {
+        let qs = Questions()
+        qs.add(questions: ["one"], category: "c")
+        qs.add(questions: ["two"], category: "d")
+        qs.save()
+
+        let qs2 = Questions(forCategory: "c")
+        XCTAssertEqual(qs2.questionData.count, 1)
+    }
+
     // MARK: - sorting
     func testAllQuestionsIsSorted() {
         let q1 = Question(withTitle: "q1")
