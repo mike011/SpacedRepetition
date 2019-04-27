@@ -11,6 +11,7 @@ import XCTest
 
 class QuestionTests: XCTestCase {
 
+    // MARK: - init
     func testInitValues() {
         let q = Question(withTitle: "title")
         XCTAssertEqual(q.incrementAmount, 0)
@@ -20,6 +21,52 @@ class QuestionTests: XCTestCase {
         XCTAssertEqual(q.timesCorrect, 0)
     }
 
+    // MARK: - sorting
+    func testBothHaveNeverBeenAsked() {
+        let q1 = Question(withTitle: "a")
+        let q2 = Question(withTitle: "b")
+        XCTAssertTrue(q1 < q2)
+    }
+
+    func testSortingSecondQuestionHasNeverBeenAsked() {
+        let q1 = Question(withTitle: "title")
+        q1.lastTimeAnswered = Date()
+        let q2 = Question(withTitle: "title2")
+        XCTAssertTrue(q2 > q1)
+    }
+
+    func testSortingFirstQuestionHasNeverBeenAsked() {
+        let q1 = Question(withTitle: "title")
+        let q2 = Question(withTitle: "title2")
+        q2.lastTimeAnswered = Date()
+        XCTAssertTrue(q2 < q1)
+    }
+
+    func testSortingBothHaveBeenAskedFirstHasFutureDate() {
+        let q1 = Question(withTitle: "title")
+        q1.lastTimeAnswered = Date(timeIntervalSinceNow: 10)
+        let q2 = Question(withTitle: "title2")
+        q2.lastTimeAnswered = Date()
+        XCTAssertTrue(q2 < q1)
+    }
+
+    func testSortingBothHaveBeenAskedSecondHasFutureDate() {
+        let q1 = Question(withTitle: "title")
+        q1.lastTimeAnswered = Date()
+        let q2 = Question(withTitle: "title2")
+        q2.lastTimeAnswered = Date(timeIntervalSinceNow: 10)
+        XCTAssertTrue(q2 > q1)
+    }
+
+    func testSortingBothHaveSameDate() {
+        let q1 = Question(withTitle: "title")
+        q1.lastTimeAnswered = Date()
+        let q2 = Question(withTitle: "title2")
+        q2.lastTimeAnswered = Date()
+        XCTAssertTrue(q2 > q1)
+    }
+
+    // MARK: - coder
     class MyCoder: NSCoder {
 
         var vals = [String: Any?]()
@@ -62,6 +109,7 @@ class QuestionTests: XCTestCase {
         XCTAssertEqual("title", coder2.decodeObject(forKey: "title") as! String)
     }
 
+    // MARK: - right answer
     func testHandleRightAnswer() {
         let q = Question(withTitle: "title")
         q.handleRightAnswer()
@@ -72,6 +120,7 @@ class QuestionTests: XCTestCase {
         XCTAssertNotNil(q.nextTimeToAsk)
     }
 
+    // MARK: - wrong answer
     func testHandleWrongAnswer() {
         let q = Question(withTitle: "title")
         q.handleWrongAnswer()
@@ -81,4 +130,5 @@ class QuestionTests: XCTestCase {
         XCTAssertNotNil(q.lastTimeAnswered)
         XCTAssertNotNil(q.nextTimeToAsk)
     }
+
 }

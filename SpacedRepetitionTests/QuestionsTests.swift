@@ -16,6 +16,19 @@ class QuestionsTests: XCTestCase {
         defaults.removeObject(forKey: "questions")
     }
 
+    // MARK: - sorting
+    func testAllQuestionsIsSorted() {
+        let q1 = Question(withTitle: "q1")
+        let q2 = Question(withTitle: "q2")
+
+        var qs = [q2,q1]
+        qs.sort()
+
+        XCTAssertEqual(qs[0].title, "q1")
+        XCTAssertEqual(qs[1].title, "q2")
+    }
+
+    // MARK: - getNextQuestion
     func testGetNextQuestionNoQuestions() {
         let qs = Questions()
         XCTAssertTrue(qs.questionData.isEmpty)
@@ -42,6 +55,19 @@ class QuestionsTests: XCTestCase {
         XCTAssertNotEqual(q, q2)
     }
 
+    func testNoQuestionsShouldBeShownIfAllQuestionsAreForFutureDates() {
+
+        // By marking a question correct it's next date to show will be at a later date.
+        let qs = Questions()
+        qs.add(questions: ["one"])
+        qs.correctAnswer()
+
+        let qs2 = Questions()
+        let q = qs2.getNextQuestion()
+        XCTAssertNil(q)
+    }
+
+    // MARK: - saving questions
     func testSavingQuestion() {
         let qs = Questions()
         qs.add(questions: ["one"])
@@ -51,6 +77,7 @@ class QuestionsTests: XCTestCase {
         XCTAssertEqual(qs2.questionData.count, 1)
     }
 
+    // MARK: - wrong answer
     func testWrongAnswer() {
         let qs = Questions()
         qs.add(questions: ["one"])
@@ -80,6 +107,7 @@ class QuestionsTests: XCTestCase {
         qs.wrongAnswer()
     }
 
+    // MARK: - correct answer
     func testCorrectAnswer() {
         let qs = Questions()
         qs.add(questions: ["one"])
@@ -102,17 +130,5 @@ class QuestionsTests: XCTestCase {
 
         // should not crash
         qs.correctAnswer()
-    }
-
-    func testNoQuestionsShouldBeShownIfAllQuestionsAreForFutureDates() {
-
-        // By marking a question correct it's next date to show will be at a later date.
-        let qs = Questions()
-        qs.add(questions: ["one"])
-        qs.correctAnswer()
-
-        let qs2 = Questions()
-        let q = qs2.getNextQuestion()
-        XCTAssertNil(q)
     }
 }

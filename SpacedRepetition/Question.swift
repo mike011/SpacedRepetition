@@ -9,7 +9,7 @@
 import Foundation
 
 /// Represent a question, so it holds the data about the question and handles updating the date on the question.
-public class Question: NSObject, NSCoding {
+public class Question: NSObject, NSCoding, Comparable {
 
     /// What is the question?
     public var title: String
@@ -101,4 +101,17 @@ extension NSCoder {
     func decodeObject(forKey key: Question.Key) -> Any? {
         return decodeObject(forKey: key.rawValue)
     }
+}
+
+public func < (left: Question, right: Question) -> Bool {
+
+    let leftLastTimeAnswerd = left.lastTimeAnswered
+    let rightLastTimeAnswerd = right.lastTimeAnswered
+    if leftLastTimeAnswerd == nil && rightLastTimeAnswerd  == nil {
+        return left.title.compare(right.title) == .orderedAscending
+    }
+    if leftLastTimeAnswerd == nil { return false }
+    if rightLastTimeAnswerd == nil { return true }
+
+    return leftLastTimeAnswerd!.compare(rightLastTimeAnswerd!) == .orderedAscending
 }

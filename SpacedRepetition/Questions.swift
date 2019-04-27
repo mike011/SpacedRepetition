@@ -24,8 +24,9 @@ public class Questions {
         // Hardcoded to using user defaults.
         let defaults = UserDefaults.standard
         if let savedQuestions = defaults.object(forKey: "questions") as? Data {
-            if let decodedQuestions = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(savedQuestions) as? [Question] {
-                allQuestionData = decodedQuestions ?? [Question]()
+            if var decodedQuestions = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(savedQuestions) as! [Question] {
+                decodedQuestions.sort()
+                allQuestionData = decodedQuestions
             }
         }
         loadQuestions()
