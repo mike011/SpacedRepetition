@@ -37,6 +37,28 @@ class QuestionsTests: XCTestCase {
         XCTAssertEqual(qs2.questionData.count, 1)
     }
 
+    // MARK: - Adding
+    func testAddSameQuestionTwiceShouldOnlyBeAddedOnce() {
+        let qs = Questions()
+        qs.add(question: "one", category: "c")
+        qs.add(question: "one", category: "c")
+        XCTAssertEqual(qs.questionData.count, 1)
+    }
+
+    func testAddTwoQuestionsShouldBeTwoQuestions() {
+        let qs = Questions()
+        qs.add(question: "one", category: "c")
+        qs.add(question: "two", category: "c")
+        XCTAssertEqual(qs.questionData.count, 2)
+    }
+
+    func testAddSameQuestionTwiceWithDifferentCategoryShouldBeTwoQuestions() {
+        let qs = Questions()
+        qs.add(question: "one", category: "c")
+        qs.add(question: "one", category: "d")
+        XCTAssertEqual(qs.questionData.count, 2)
+    }
+
     // MARK: - sorting
     func testAllQuestionsIsSorted() {
         let q1 = Question(withTitle: "q1")

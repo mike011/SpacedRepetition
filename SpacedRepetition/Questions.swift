@@ -8,13 +8,20 @@
 
 import Foundation
 
+/*
+ * Right now the framework is working on the idea that when the app starts all the questions are added.
+ * Then through out that life cycle the questions are updated.
+ *
+ * This does not work when there is already a question management system in place.
+ * Is there a way to create a lighter library that only deals with updating questions?
+ */
+
 /// Manages everything to do with questions.
 public class Questions {
 
     public var questionData = [Question]()
     public var allQuestionData = [Question]()
     private var currentQuestionIndex = 0
-    private var loadedQuestions = false
 
     public init(forCategory category: String? = nil) {
         loadAllQuestions(forCategory: category)
@@ -33,20 +40,42 @@ public class Questions {
                     }
                     return $0.category == category
                 })
-                loadedQuestions = true
             }
         }
         loadQuestions()
     }
 
-    /// If you've never added questions, this is the function to call to add them.
+    /// You can add a bunch of questions with this method. If the questions have already been added they will be ignored.
     public func add(questions titles: [String], category: String? = nil) {
-        if !loadedQuestions {
-            for title in titles {
-                allQuestionData.append(Question(withTitle: title, andCategory: category))
-            }
+        for title in titles {
+            addQuestion(withTitle: title, andCategory: category)
         }
         loadQuestions()
+    }
+
+    /// You can add one question with this method. If the question have already been added it will be ignored.
+    public func add(question title: String, category: String? = nil) {
+        addQuestion(withTitle: title, andCategory: category)
+        loadQuestions()
+    }
+
+    private func addQuestion(withTitle title: String, andCategory category: String?) {
+        let question = Question(withTitle: title, andCategory: category)
+        if shouldAdd(question) {
+            allQuestionData.append(question)
+        }
+    }
+
+    private func shouldAdd(_ question: Question) -> Bool {
+        guard allQuestionData.count > 0 else {
+            return true
+        }
+        return allQuestionData.contains(where: { (q) -> Bool in
+            if q.category != question.category {
+                return true
+            }
+            return q.title != question.title
+        })
     }
 
     /// Loads only the questions needed for the day.
@@ -61,6 +90,10 @@ public class Questions {
             // The question should be asked today
             return next.compare(Date()) == ComparisonResult.orderedAscending
         }
+    }
+
+    public func getCurrentQuestion() -> Question? {
+        return questionData[currentQuestionIndex]
     }
 
     public func correctAnswer() {

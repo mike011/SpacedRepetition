@@ -114,7 +114,7 @@ public func < (left: Question, right: Question) -> Bool {
 
     let leftLastTimeAnswerd = left.lastTimeAnswered
     let rightLastTimeAnswerd = right.lastTimeAnswered
-    if leftLastTimeAnswerd == nil && rightLastTimeAnswerd  == nil {
+    if leftLastTimeAnswerd == nil && rightLastTimeAnswerd == nil {
         return left.title.compare(right.title) == .orderedAscending
     }
     if leftLastTimeAnswerd == nil { return false }
