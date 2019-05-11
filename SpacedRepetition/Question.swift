@@ -97,6 +97,13 @@ public class Question: NSObject, NSCoding, Comparable {
         incrementAmount = spacedRepetition.handleWrongAnswer()
         nextTimeToAsk = Date()
     }
+
+    override public func isEqual(_ object: Any?) -> Bool {
+        guard let b = object as? Question else {
+            return false
+        }
+        return category == b.category && title == b.title
+    }
 }
 
 extension NSCoder {
@@ -121,4 +128,23 @@ public func < (left: Question, right: Question) -> Bool {
     if rightLastTimeAnswerd == nil { return true }
 
     return leftLastTimeAnswerd!.compare(rightLastTimeAnswerd!) == .orderedAscending
+}
+
+// MARK: - Debugging
+extension Question {
+
+    /// Handlings creating the string for debugging
+    override public var description: String {
+        var categoryDescription = ""
+        if let category = category {
+            categoryDescription = "\(category) - "
+        }
+        var result = "\(categoryDescription)\(title) \n"
+        result += "lastTimeAnswered=\(String(describing: lastTimeAnswered))\t"
+        result += "timesAsked=\(timesAsked)\t"
+        result += "timesCorrect=\(timesCorrect)\t"
+        result += "incrementAmount=\(incrementAmount)\t"
+        result += "nextTimeToAsk=\(String(describing: nextTimeToAsk))"
+        return result
+    }
 }

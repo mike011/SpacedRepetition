@@ -137,4 +137,73 @@ class QuestionTests: XCTestCase {
         XCTAssertNotNil(q.nextTimeToAsk)
     }
 
+    // MARK: - Equivalence
+    func testEqualsNil() {
+        let q = Question(withTitle: "title")
+        XCTAssertNotEqual(q, nil)
+    }
+
+    func testEqualsSameObject() {
+        let q = Question(withTitle: "title")
+        XCTAssertEqual(q, q)
+    }
+
+    func testEqualsDifferentObject() {
+        let q = Question(withTitle: "title")
+        let q2 = Question(withTitle: "title")
+        XCTAssertEqual(q, q2)
+    }
+
+    func testEqualsDifferentTitles() {
+        let q = Question(withTitle: "title")
+        let q2 = Question(withTitle: "title2")
+        XCTAssertNotEqual(q, q2)
+    }
+
+    func testEqualsSameCategories() {
+        let q = Question(withTitle: "title")
+        q.category = "a"
+        let q2 = Question(withTitle: "title")
+        q2.category = "a"
+        XCTAssertEqual(q, q2)
+    }
+
+    func testEqualsDifferentCategories() {
+        let q = Question(withTitle: "title")
+        q.category = "a"
+        let q2 = Question(withTitle: "title")
+        q2.category = "b"
+        XCTAssertNotEqual(q, q2)
+    }
+
+    func testEqualsDifferentCategoriesAndDifferentTitles() {
+        let q = Question(withTitle: "title2")
+        q.category = "a"
+        let q2 = Question(withTitle: "title")
+        q2.category = "b"
+        XCTAssertNotEqual(q, q2)
+    }
+
+    // MARK: - Printing
+    func testPrintingAQuestionWithNoCategory() {
+        let q = Question(withTitle: "tip")
+        var description = "tip \n"
+        description += "lastTimeAnswered=nil\t"
+        description += "timesAsked=0\t"
+        description += "timesCorrect=0\t"
+        description += "incrementAmount=0\t"
+        description += "nextTimeToAsk=nil"
+        XCTAssertEqual(q.description, description)
+
+    }
+    func testPrintingAQuestion() {
+        let q = Question(withTitle: "tip", andCategory: "cat")
+        var description = "cat - tip \n"
+        description += "lastTimeAnswered=nil\t"
+        description += "timesAsked=0\t"
+        description += "timesCorrect=0\t"
+        description += "incrementAmount=0\t"
+        description += "nextTimeToAsk=nil"
+        XCTAssertEqual(q.description, description)
+    }
 }

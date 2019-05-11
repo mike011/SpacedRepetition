@@ -174,4 +174,12 @@ class QuestionsTests: XCTestCase {
         // should not crash
         qs.correctAnswer()
     }
+
+    // MARK: - Printing
+    func skipNotReadytestPrintingOneQuestion() {
+        let qs = Questions()
+        qs.add(questions: ["one"])
+        XCTAssertEqual(qs.getDataToPrint(), "")
+    }
+
 }

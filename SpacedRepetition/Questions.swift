@@ -61,21 +61,9 @@ public class Questions {
 
     private func addQuestion(withTitle title: String, andCategory category: String?) {
         let question = Question(withTitle: title, andCategory: category)
-        if shouldAdd(question) {
+        if !allQuestionData.contains(question) {
             allQuestionData.append(question)
         }
-    }
-
-    private func shouldAdd(_ question: Question) -> Bool {
-        guard allQuestionData.count > 0 else {
-            return true
-        }
-        return allQuestionData.contains(where: { (q) -> Bool in
-            if q.category != question.category {
-                return true
-            }
-            return q.title != question.title
-        })
     }
 
     /// Loads only the questions needed for the day.
@@ -139,5 +127,18 @@ public class Questions {
             let defaults = UserDefaults.standard
             defaults.set(savedData, forKey: "questions")
         }
+    }
+
+    func getDataToPrint() -> String {
+        var toPrint = ""
+        for data in allQuestionData {
+            toPrint += "\(data) \n"
+        }
+        return toPrint
+    }
+
+    /// Helpful for debugging will print a small description of every question
+    func print() {
+        Swift.print(getDataToPrint())
     }
 }
