@@ -27,6 +27,11 @@ public class Questions {
         loadAllQuestions(forCategory: category)
     }
 
+    init(questions: [Question]) {
+        allQuestionData = questions
+        loadQuestions()
+    }
+
     /// Loads all the stored questions.
     private func loadAllQuestions(forCategory category: String?) {
         // Hardcoded to using user defaults.
@@ -78,6 +83,15 @@ public class Questions {
             // The question should be asked today
             return next.compare(Date()) == ComparisonResult.orderedAscending
         }
+        questionData.sort(by: { (q1, q2) -> Bool in
+            guard let q1Next = q1.nextTimeToAsk else {
+                return true
+            }
+            guard let q2Next = q2.nextTimeToAsk else {
+                return false
+            }
+            return q1Next.compare(q2Next) == ComparisonResult.orderedDescending
+        })
     }
 
     public func getCurrentQuestion() -> Question? {

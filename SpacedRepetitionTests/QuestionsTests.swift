@@ -98,6 +98,51 @@ class QuestionsTests: XCTestCase {
         XCTAssertNotEqual(q, q2)
     }
 
+    func testGetCurrentQuestionFirstOneNeverAnswed() {
+        let one = Question(withTitle: "one")
+
+        let two = Question(withTitle: "two")
+        two.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -1, to: Date())
+
+        let qs = Questions(questions: [one,two])
+
+        let q2 = qs.getCurrentQuestion()
+        XCTAssertEqual(q2?.title, "one")
+    }
+
+    func testGetCurrentQuestionBothNeverAnswed() {
+        let one = Question(withTitle: "one")
+        let two = Question(withTitle: "two")
+
+        let qs = Questions(questions: [one,two])
+
+        let q2 = qs.getCurrentQuestion()
+        XCTAssertEqual(q2?.title, "two")
+    }
+
+    func testGetCurrentQuestionFirstOneAnsweredAndDue() {
+        let one = Question(withTitle: "one")
+        one.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -1, to: Date())
+
+        let two = Question(withTitle: "two")
+        let qs = Questions(questions: [one,two])
+
+        let q2 = qs.getCurrentQuestion()
+        XCTAssertEqual(q2?.title, "two")
+    }
+
+    func testGetCurrentQuestionTwoQuestionsFirstOneAnsweredButShouldntBeAskedAgain() {
+        let one = Question(withTitle: "one")
+        one.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -2, to: Date())
+
+        let two = Question(withTitle: "two")
+        two.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -1, to: Date())
+
+        let qs = Questions(questions: [one,two])
+        let q2 = qs.getCurrentQuestion()
+        XCTAssertEqual(q2?.title, "two")
+    }
+
     func testNoQuestionsShouldBeShownIfAllQuestionsAreForFutureDates() {
 
         // By marking a question correct it's next date to show will be at a later date.
