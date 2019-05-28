@@ -106,7 +106,6 @@ public class Questions {
         questionData[currentQuestionIndex].handleRightAnswer()
 
         questionData.remove(at: currentQuestionIndex)
-        currentQuestionIndex = -1
         save()
     }
 
