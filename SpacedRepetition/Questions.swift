@@ -126,9 +126,15 @@ public class Questions {
 
         var newIndex = 0
         if questionData.count > 1 {
-            newIndex = currentQuestionIndex
-            while newIndex == currentQuestionIndex {
-                newIndex = Int.random(in: 0 ..< questionData.count)
+            let nextTimeToAsk = questionData[0].nextTimeToAsk
+            let possibleNextQuestions = questionData.filter { (q) -> Bool in
+                return q.nextTimeToAsk == nextTimeToAsk
+            }
+            if possibleNextQuestions.count > 1 {
+                newIndex = currentQuestionIndex
+                while newIndex == currentQuestionIndex {
+                    newIndex = Int.random(in: 0 ..< possibleNextQuestions.count)
+                }
             }
         }
         currentQuestionIndex = newIndex

@@ -155,6 +155,37 @@ class QuestionsTests: XCTestCase {
         XCTAssertNil(q)
     }
 
+    func testUnansweredQuestionsShouldAlwaysBeShownFirst() {
+
+        let one = Question(withTitle: "one")
+        one.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -1, to: Date())
+
+        let two = Question(withTitle: "two")
+        let three = Question(withTitle: "three")
+
+        let qs = Questions(questions: [one,two,three])
+        qs.correctAnswer()
+        let q = qs.getNextQuestion()
+
+        XCTAssertEqual(q?.title, "two")
+    }
+
+    func testUnansweredQuestionsShouldAlwaysBeShownFirst2() {
+
+        let one = Question(withTitle: "one")
+        one.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -1, to: Date())
+
+        let two = Question(withTitle: "two")
+        let three = Question(withTitle: "three")
+        three.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: 1, to: Date())
+
+        let qs = Questions(questions: [one,two,three])
+        qs.correctAnswer()
+        let q = qs.getNextQuestion()
+
+        XCTAssertEqual(q?.title, "one")
+    }
+
     // MARK: - saving questions
     func testSavingQuestion() {
         let qs = Questions()
