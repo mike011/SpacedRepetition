@@ -90,7 +90,7 @@ public class Questions {
             guard let q2Next = q2.nextTimeToAsk else {
                 return false
             }
-            return q1Next.compare(q2Next) == ComparisonResult.orderedDescending
+            return q1Next.compare(q2Next) == ComparisonResult.orderedAscending
         })
     }
 

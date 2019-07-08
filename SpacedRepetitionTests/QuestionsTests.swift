@@ -131,7 +131,7 @@ class QuestionsTests: XCTestCase {
         XCTAssertEqual(q2?.title, "two")
     }
 
-    func testGetCurrentQuestionTwoQuestionsFirstOneAnsweredButShouldntBeAskedAgain() {
+    func testGetCurrentQuestionTwoQuestionsFirstOneOlderShouldBeAskedFirst() {
         let one = Question(withTitle: "one")
         one.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -2, to: Date())
 
@@ -140,7 +140,7 @@ class QuestionsTests: XCTestCase {
 
         let qs = Questions(questions: [one,two])
         let q2 = qs.getCurrentQuestion()
-        XCTAssertEqual(q2?.title, "two")
+        XCTAssertEqual(q2?.title, "one")
     }
 
     func testNoQuestionsShouldBeShownIfAllQuestionsAreForFutureDates() {
