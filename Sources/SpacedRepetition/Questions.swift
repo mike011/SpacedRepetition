@@ -17,6 +17,7 @@ import Foundation
  */
 
 /// Manages everything to do with questions.
+@available(OSX 10.13, *)
 public class Questions {
 
     public var questionData = [Question]()
@@ -37,7 +38,7 @@ public class Questions {
         // Hardcoded to using user defaults.
         let defaults = UserDefaults.standard
         if let savedQuestions = defaults.object(forKey: "questions") as? Data {
-            if var decodedQuestions = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(savedQuestions) as! [Question] {
+            if var decodedQuestions = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(savedQuestions) as? [Question] {
                 decodedQuestions.sort()
                 allQuestionData = decodedQuestions.filter({
                     if category == nil {
