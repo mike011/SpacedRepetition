@@ -49,7 +49,7 @@ public class Question: NSObject, NSCoding, Comparable {
         case nextTimeToAsk
     }
 
-    init(title: String, answer: String? = nil, category: String? = nil) {
+    public init(title: String, answer: String? = nil, category: String? = nil) {
         incrementAmount = 0
         self.title = title
         self.category = category
