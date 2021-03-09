@@ -19,8 +19,14 @@ class QuestionsTests: XCTestCase {
     // MARK: - init
     func testInitAllQuestions() {
         let qs = Questions()
-        qs.add(questions: ["one"], category: "c")
-        qs.add(questions: ["two"], category: "d")
+        var array1 = [Question]()
+        array1.append(Question(title: "one", answer: nil, category: "c"))
+
+        var array2 = [Question]()
+        array2.append(Question(title: "two", answer: nil, category: "d"))
+
+        qs.add(questions: array1)
+        qs.add(questions: array2)
         qs.save()
 
         let qs2 = Questions()
@@ -29,8 +35,14 @@ class QuestionsTests: XCTestCase {
 
     func testInitOnlySpecifiedCategory() {
         let qs = Questions()
-        qs.add(questions: ["one"], category: "c")
-        qs.add(questions: ["two"], category: "d")
+        var array1 = [Question]()
+        array1.append(Question(title: "one", answer: nil, category: "c"))
+
+        var array2 = [Question]()
+        array2.append(Question(title: "two", answer: nil, category: "d"))
+
+        qs.add(questions: array1)
+        qs.add(questions: array2)
         qs.save()
 
         let qs2 = Questions(forCategory: "c")
@@ -40,29 +52,29 @@ class QuestionsTests: XCTestCase {
     // MARK: - Adding
     func testAddSameQuestionTwiceShouldOnlyBeAddedOnce() {
         let qs = Questions()
-        qs.add(question: "one", category: "c")
-        qs.add(question: "one", category: "c")
+        qs.add(question: Question(title: "one", answer: nil, category: "c"))
+        qs.add(question: Question(title: "one", answer: nil, category: "c"))
         XCTAssertEqual(qs.questionData.count, 1)
     }
 
     func testAddTwoQuestionsShouldBeTwoQuestions() {
         let qs = Questions()
-        qs.add(question: "one", category: "c")
-        qs.add(question: "two", category: "c")
+        qs.add(question: Question(title: "one", answer: nil, category: "c"))
+        qs.add(question: Question(title: "two", answer: nil, category: "c"))
         XCTAssertEqual(qs.questionData.count, 2)
     }
 
     func testAddSameQuestionTwiceWithDifferentCategoryShouldBeTwoQuestions() {
         let qs = Questions()
-        qs.add(question: "one", category: "c")
-        qs.add(question: "one", category: "d")
+        qs.add(question: Question(title: "one", answer: nil, category: "c"))
+        qs.add(question: Question(title: "one", answer: nil, category: "d"))
         XCTAssertEqual(qs.questionData.count, 2)
     }
 
     // MARK: - sorting
     func testAllQuestionsIsSorted() {
-        let q1 = Question(withTitle: "q1")
-        let q2 = Question(withTitle: "q2")
+        let q1 = Question(title: "q1")
+        let q2 = Question(title: "q2")
 
         var qs = [q2,q1]
         qs.sort()
@@ -80,7 +92,7 @@ class QuestionsTests: XCTestCase {
 
     func testGetNextQuestionOneQuestion() {
         let qs = Questions()
-        qs.add(questions: ["one"])
+        qs.add(questions: [Question(title: "one")])
 
         let q = qs.getNextQuestion()
         XCTAssertNotNil(q)
@@ -89,7 +101,7 @@ class QuestionsTests: XCTestCase {
 
     func testGetNextQuestionTwoQuestions() {
         let qs = Questions()
-        qs.add(questions: ["one","two"])
+        qs.add(questions: [Question(title: "one"),Question(title: "two")])
 
         let q = qs.getNextQuestion()
         XCTAssertNotNil(q)
@@ -99,9 +111,9 @@ class QuestionsTests: XCTestCase {
     }
 
     func testGetCurrentQuestionFirstOneNeverAnswed() {
-        let one = Question(withTitle: "one")
+        let one = Question(title: "one")
 
-        let two = Question(withTitle: "two")
+        let two = Question(title: "two")
         two.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -1, to: Date())
 
         let qs = Questions(questions: [one,two])
@@ -111,8 +123,8 @@ class QuestionsTests: XCTestCase {
     }
 
     func testGetCurrentQuestionBothNeverAnswed() {
-        let one = Question(withTitle: "one")
-        let two = Question(withTitle: "two")
+        let one = Question(title: "one")
+        let two = Question(title: "two")
 
         let qs = Questions(questions: [one,two])
 
@@ -121,10 +133,10 @@ class QuestionsTests: XCTestCase {
     }
 
     func testGetCurrentQuestionFirstOneAnsweredAndDue() {
-        let one = Question(withTitle: "one")
+        let one = Question(title: "one")
         one.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -1, to: Date())
 
-        let two = Question(withTitle: "two")
+        let two = Question(title: "two")
         let qs = Questions(questions: [one,two])
 
         let q2 = qs.getCurrentQuestion()
@@ -132,10 +144,10 @@ class QuestionsTests: XCTestCase {
     }
 
     func testGetCurrentQuestionTwoQuestionsFirstOneOlderShouldBeAskedFirst() {
-        let one = Question(withTitle: "one")
+        let one = Question(title: "one")
         one.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -2, to: Date())
 
-        let two = Question(withTitle: "two")
+        let two = Question(title: "two")
         two.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -1, to: Date())
 
         let qs = Questions(questions: [one,two])
@@ -147,7 +159,7 @@ class QuestionsTests: XCTestCase {
 
         // By marking a question correct it's next date to show will be at a later date.
         let qs = Questions()
-        qs.add(questions: ["one"])
+        qs.add(questions: [Question(title: "one")])
         qs.correctAnswer()
 
         let qs2 = Questions()
@@ -157,11 +169,11 @@ class QuestionsTests: XCTestCase {
 
     func testUnansweredQuestionsShouldAlwaysBeShownFirst() {
 
-        let one = Question(withTitle: "one")
+        let one = Question(title: "one")
         one.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -1, to: Date())
 
-        let two = Question(withTitle: "two")
-        let three = Question(withTitle: "three")
+        let two = Question(title: "two")
+        let three = Question(title: "three")
 
         let qs = Questions(questions: [one,two,three])
         qs.correctAnswer()
@@ -172,11 +184,11 @@ class QuestionsTests: XCTestCase {
 
     func testUnansweredQuestionsShouldAlwaysBeShownFirst2() {
 
-        let one = Question(withTitle: "one")
+        let one = Question(title: "one")
         one.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -1, to: Date())
 
-        let two = Question(withTitle: "two")
-        let three = Question(withTitle: "three")
+        let two = Question(title: "two")
+        let three = Question(title: "three")
         three.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: 1, to: Date())
 
         let qs = Questions(questions: [one,two,three])
@@ -189,7 +201,7 @@ class QuestionsTests: XCTestCase {
     // MARK: - saving questions
     func testSavingQuestion() {
         let qs = Questions()
-        qs.add(questions: ["one"])
+        qs.add(questions: [Question(title: "one")])
         qs.save()
 
         let qs2 = Questions()
@@ -199,7 +211,7 @@ class QuestionsTests: XCTestCase {
     // MARK: - wrong answer
     func testWrongAnswer() {
         let qs = Questions()
-        qs.add(questions: ["one"])
+        qs.add(questions: [Question(title: "one")])
         qs.wrongAnswer()
 
         let q = qs.getNextQuestion()
@@ -219,7 +231,7 @@ class QuestionsTests: XCTestCase {
 
     func testWrongAnswerWithNoMoreQuestionsAvailable() {
         let qs = Questions()
-        qs.add(questions: ["one"])
+        qs.add(questions: [Question(title: "one")])
         qs.correctAnswer()
 
         // should not crash
@@ -229,7 +241,7 @@ class QuestionsTests: XCTestCase {
     // MARK: - correct answer
     func testCorrectAnswer() {
         let qs = Questions()
-        qs.add(questions: ["one"])
+        qs.add(questions: [Question(title: "one")])
         qs.correctAnswer()
 
         let q = qs.getNextQuestion()
@@ -244,7 +256,7 @@ class QuestionsTests: XCTestCase {
 
     func testCorrectAnswerWithNoMoreQuestionsAvailable() {
         let qs = Questions()
-        qs.add(questions: ["one"])
+        qs.add(questions: [Question(title: "one")])
         qs.correctAnswer()
 
         // should not crash
@@ -254,7 +266,7 @@ class QuestionsTests: XCTestCase {
     // MARK: - Printing
     func skipNotReadytestPrintingOneQuestion() {
         let qs = Questions()
-        qs.add(questions: ["one"])
+        qs.add(questions: [Question(title: "one")])
         XCTAssertEqual(qs.getDataToPrint(), "")
     }
 

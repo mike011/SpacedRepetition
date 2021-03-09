@@ -13,10 +13,13 @@ class QuestionTests: XCTestCase {
 
     // MARK: - init
     func testInitValues() {
-        let q = Question(withTitle: "title", andCategory: "c")
+        let q = Question(title: "title",
+                         answer: "42",
+                         category: "c")
         XCTAssertEqual(q.incrementAmount, 0)
         XCTAssertEqual(q.title, "title")
         XCTAssertEqual(q.category, "c")
+        XCTAssertEqual(q.answer, "42")
         XCTAssertEqual(q.timesAsked, 0)
         XCTAssertEqual(q.incrementAmount, 0)
         XCTAssertEqual(q.timesCorrect, 0)
@@ -24,51 +27,51 @@ class QuestionTests: XCTestCase {
 
     // MARK: - sorting
     func testBothHaveNeverBeenAsked() {
-        let q1 = Question(withTitle: "a")
-        let q2 = Question(withTitle: "b")
+        let q1 = Question(title: "a")
+        let q2 = Question(title: "b")
         XCTAssertTrue(q1 < q2)
     }
 
     func testSortingSecondQuestionHasNeverBeenAsked() {
-        let q1 = Question(withTitle: "title")
+        let q1 = Question(title: "title")
         q1.lastTimeAnswered = Date()
-        let q2 = Question(withTitle: "title2")
+        let q2 = Question(title: "title2")
         XCTAssertTrue(q2 > q1)
     }
 
     func testSortingFirstQuestionHasNeverBeenAsked() {
-        let q1 = Question(withTitle: "title")
-        let q2 = Question(withTitle: "title2")
+        let q1 = Question(title: "title")
+        let q2 = Question(title: "title2")
         q2.lastTimeAnswered = Date()
         XCTAssertTrue(q2 < q1)
     }
 
     func testSortingBothHaveBeenAskedFirstHasFutureDate() {
-        let q1 = Question(withTitle: "title")
+        let q1 = Question(title: "title")
         q1.lastTimeAnswered = Date(timeIntervalSinceNow: 10)
-        let q2 = Question(withTitle: "title2")
+        let q2 = Question(title: "title2")
         q2.lastTimeAnswered = Date()
         XCTAssertTrue(q2 < q1)
     }
 
     func testSortingBothHaveBeenAskedSecondHasFutureDate() {
-        let q1 = Question(withTitle: "title")
+        let q1 = Question(title: "title")
         q1.lastTimeAnswered = Date()
-        let q2 = Question(withTitle: "title2")
+        let q2 = Question(title: "title2")
         q2.lastTimeAnswered = Date(timeIntervalSinceNow: 10)
         XCTAssertTrue(q2 > q1)
     }
 
     func testSortingBothHaveSameDate() {
-        let q1 = Question(withTitle: "title")
+        let q1 = Question(title: "title")
         q1.lastTimeAnswered = Date()
-        let q2 = Question(withTitle: "title2")
+        let q2 = Question(title: "title2")
         q2.lastTimeAnswered = Date()
         XCTAssertTrue(q2 > q1)
     }
 
     // MARK: - coder
-    class MyCoder: NSCoder {
+    class MockCoder: NSCoder {
 
         var vals = [String: Any?]()
 
@@ -88,14 +91,16 @@ class QuestionTests: XCTestCase {
 
     func testCoderInitValues() {
 
-        let coder = MyCoder()
+        let coder = MockCoder()
         coder.encode("t", forKey: "title")
         coder.encode("cat", forKey: "category")
+        coder.encode("42", forKey: "answer")
 
         let q = Question(coder: coder)
         XCTAssertEqual(q.incrementAmount, 0)
         XCTAssertEqual(q.title, "t")
         XCTAssertEqual(q.category, "cat")
+        XCTAssertEqual(q.answer, "42")
         XCTAssertEqual(q.timesAsked, 0)
         XCTAssertEqual(q.incrementAmount, 0)
         XCTAssertEqual(q.timesCorrect, 0)
@@ -103,21 +108,36 @@ class QuestionTests: XCTestCase {
 
     func testEncoder() {
 
-        let coder = MyCoder()
+        let coder = MockCoder()
         coder.encode("t", forKey: "title")
         coder.encode("cat", forKey: "category")
+        coder.encode("42", forKey: "answer")
 
         let q = Question(coder: coder)
 
-        let coder2 = MyCoder()
+        let coder2 = MockCoder()
         q.encode(with: coder2)
         XCTAssertEqual("t", coder2.decodeObject(forKey: "title") as! String)
         XCTAssertEqual("cat", coder2.decodeObject(forKey: "category") as! String)
+        XCTAssertEqual("42", coder2.decodeObject(forKey: "answer") as! String)
+    }
+
+    // MARK: - Is right answer?
+    func testIsAnswerCorrectNope() {
+        let q = Question(title: "frank", answer: "42", category: nil)
+        let result = q.isCorrect("21")
+        XCTAssertFalse(result)
+    }
+
+    func testIsAnswerCorrect() {
+        let q = Question(title: "frank", answer: "42", category: nil)
+        let result = q.isCorrect("42")
+        XCTAssertTrue(result)
     }
 
     // MARK: - right answer
     func testHandleRightAnswer() {
-        let q = Question(withTitle: "title")
+        let q = Question(title: "title")
         q.handleRightAnswer()
         XCTAssertEqual(q.timesAsked, 1)
         XCTAssertEqual(q.timesCorrect, 1)
@@ -128,7 +148,7 @@ class QuestionTests: XCTestCase {
 
     // MARK: - wrong answer
     func testHandleWrongAnswer() {
-        let q = Question(withTitle: "title")
+        let q = Question(title: "title")
         q.handleWrongAnswer()
         XCTAssertEqual(q.timesAsked, 1)
         XCTAssertEqual(q.timesCorrect, 0)
@@ -139,54 +159,54 @@ class QuestionTests: XCTestCase {
 
     // MARK: - Equivalence
     func testEqualsNil() {
-        let q = Question(withTitle: "title")
+        let q = Question(title: "title")
         XCTAssertNotEqual(q, nil)
     }
 
     func testEqualsSameObject() {
-        let q = Question(withTitle: "title")
+        let q = Question(title: "title")
         XCTAssertEqual(q, q)
     }
 
     func testEqualsDifferentObject() {
-        let q = Question(withTitle: "title")
-        let q2 = Question(withTitle: "title")
+        let q = Question(title: "title")
+        let q2 = Question(title: "title")
         XCTAssertEqual(q, q2)
     }
 
     func testEqualsDifferentTitles() {
-        let q = Question(withTitle: "title")
-        let q2 = Question(withTitle: "title2")
+        let q = Question(title: "title")
+        let q2 = Question(title: "title2")
         XCTAssertNotEqual(q, q2)
     }
 
     func testEqualsSameCategories() {
-        let q = Question(withTitle: "title")
+        let q = Question(title: "title")
         q.category = "a"
-        let q2 = Question(withTitle: "title")
+        let q2 = Question(title: "title")
         q2.category = "a"
         XCTAssertEqual(q, q2)
     }
 
     func testEqualsDifferentCategories() {
-        let q = Question(withTitle: "title")
+        let q = Question(title: "title")
         q.category = "a"
-        let q2 = Question(withTitle: "title")
+        let q2 = Question(title: "title")
         q2.category = "b"
         XCTAssertNotEqual(q, q2)
     }
 
     func testEqualsDifferentCategoriesAndDifferentTitles() {
-        let q = Question(withTitle: "title2")
+        let q = Question(title: "title2")
         q.category = "a"
-        let q2 = Question(withTitle: "title")
+        let q2 = Question(title: "title")
         q2.category = "b"
         XCTAssertNotEqual(q, q2)
     }
 
     // MARK: - Printing
     func testPrintingAQuestionWithNoCategory() {
-        let q = Question(withTitle: "tip")
+        let q = Question(title: "tip")
         var description = "tip \n"
         description += "lastTimeAnswered=nil\t"
         description += "timesAsked=0\t"
@@ -197,7 +217,7 @@ class QuestionTests: XCTestCase {
 
     }
     func testPrintingAQuestion() {
-        let q = Question(withTitle: "tip", andCategory: "cat")
+        let q = Question(title: "tip", category: "cat")
         var description = "cat - tip \n"
         description += "lastTimeAnswered=nil\t"
         description += "timesAsked=0\t"

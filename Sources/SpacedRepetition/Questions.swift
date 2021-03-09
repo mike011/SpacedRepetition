@@ -52,24 +52,19 @@ public class Questions {
     }
 
     /// You can add a bunch of questions with this method. If the questions have already been added they will be ignored.
-    public func add(questions titles: [String], category: String? = nil) {
-        for title in titles {
-            addQuestion(withTitle: title, andCategory: category)
+    public func add(questions: [Question]) {
+        for question in questions {
+            add(question: question)
         }
         loadQuestions()
     }
 
     /// You can add one question with this method. If the question have already been added it will be ignored.
-    public func add(question title: String, category: String? = nil) {
-        addQuestion(withTitle: title, andCategory: category)
-        loadQuestions()
-    }
-
-    private func addQuestion(withTitle title: String, andCategory category: String?) {
-        let question = Question(withTitle: title, andCategory: category)
+    public func add(question: Question) {
         if !allQuestionData.contains(question) {
             allQuestionData.append(question)
         }
+        loadQuestions()
     }
 
     /// Loads only the questions needed for the day.
@@ -98,6 +93,8 @@ public class Questions {
     public func getCurrentQuestion() -> Question? {
         return questionData[currentQuestionIndex]
     }
+
+    public 
 
     public func correctAnswer() {
         guard questionData.count > 0 else {

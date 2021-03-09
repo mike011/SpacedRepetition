@@ -6,7 +6,6 @@
 //  Copyright © 2019 charland. All rights reserved.
 //
 
-import UIKit
 import CoreData
 
 @UIApplicationMain
