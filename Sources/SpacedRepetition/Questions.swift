@@ -94,8 +94,6 @@ public class Questions {
         return questionData[currentQuestionIndex]
     }
 
-    public 
-
     public func correctAnswer() {
         guard questionData.count > 0 else {
             return
