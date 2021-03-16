@@ -12,13 +12,13 @@ import Foundation
 public class Question: NSObject, NSCoding, Comparable {
 
     /// What is the question?
-    public var title: String
+    public let title: String
 
     /// What is the category the question exists in?
-    public var category: String?
+    public let category: String?
 
     /// The answer to the question
-    public var answer: String?
+    public let answer: String?
 
     /// When was this question last answered correctly?
     public var lastTimeAnswered: Date?
@@ -27,7 +27,7 @@ public class Question: NSObject, NSCoding, Comparable {
     public var timesAsked: Int
 
     /// How many times has this question been answered correctly?
-    var timesCorrect: Int
+    public var timesCorrect: Int
 
     /// How many days when answered correctly should it be to the next question?
     var incrementAmount: Int
@@ -87,11 +87,11 @@ public class Question: NSObject, NSCoding, Comparable {
         return text == answer
     }
 
-    func handleRightAnswer() {
+    func handleRightAnswer(confidence: Confidence = .medium) {
         lastTimeAnswered = Date()
         timesAsked += 1
         timesCorrect += 1
-        incrementAmount = spacedRepetition.handleRightAnswer()
+        incrementAmount = spacedRepetition.handleRightAnswer(confidence: confidence)
 
         var dateComponent = DateComponents()
         dateComponent.day = incrementAmount

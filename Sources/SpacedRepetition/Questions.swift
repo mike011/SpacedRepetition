@@ -94,12 +94,12 @@ public class Questions {
         return questionData[currentQuestionIndex]
     }
 
-    public func correctAnswer() {
+    public func correctAnswer(confidence: Confidence = .medium) {
         guard questionData.count > 0 else {
             return
         }
 
-        questionData[currentQuestionIndex].handleRightAnswer()
+        questionData[currentQuestionIndex].handleRightAnswer(confidence: confidence)
 
         questionData.remove(at: currentQuestionIndex)
         save()

@@ -181,26 +181,20 @@ class QuestionTests: XCTestCase {
     }
 
     func testEqualsSameCategories() {
-        let q = Question(title: "title")
-        q.category = "a"
-        let q2 = Question(title: "title")
-        q2.category = "a"
+        let q = Question(title: "title", category: "a")
+        let q2 = Question(title: "title", category: "a")
         XCTAssertEqual(q, q2)
     }
 
     func testEqualsDifferentCategories() {
-        let q = Question(title: "title")
-        q.category = "a"
-        let q2 = Question(title: "title")
-        q2.category = "b"
+        let q = Question(title: "title", category: "a")
+        let q2 = Question(title: "title", category: "b")
         XCTAssertNotEqual(q, q2)
     }
 
     func testEqualsDifferentCategoriesAndDifferentTitles() {
-        let q = Question(title: "title2")
-        q.category = "a"
-        let q2 = Question(title: "title")
-        q2.category = "b"
+        let q = Question(title: "title2", category: "a")
+        let q2 = Question(title: "title", category: "b")
         XCTAssertNotEqual(q, q2)
     }
 

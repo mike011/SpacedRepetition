@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// This class only handles calculating the next date as to when to ask a question
+/// This class only handles calculating the next date as to when to ask a question.
 class SpacedRepetition {
 
     private var incrementAmount: Int
@@ -17,8 +17,9 @@ class SpacedRepetition {
         self.incrementAmount = currentIncrementAmount
     }
 
-    func handleRightAnswer() -> Int {
-        incrementAmount = fibonacci(getFibonacciIndex(incrementAmount))
+    func handleRightAnswer(confidence: Confidence = .medium) -> Int {
+        let index = getFibonacciIndex(afterValue: incrementAmount)
+        incrementAmount = getFibonacciValue(atIndex: index)
         return incrementAmount
     }
 
@@ -27,28 +28,32 @@ class SpacedRepetition {
         return incrementAmount
     }
 
-    func fibonacci(_ n: Int) -> Int {
-        if n < 5 {
-            // for small numbers just make it one more day.
-            return n + 1
-        }
-        if n > 15 {
-            // hard coded at a max of roughly 2.7 years
-            return 987
-        }
-        var fibs: [Int] = [1, 1]
-        if n >= 2 {
-            (2...n).forEach { i in
-                fibs.append(fibs[i - 1] + fibs[i - 2])
-            }
-        }
-        return fibs.last!
-    }
 
-    func getFibonacciIndex(_ amount: Int) -> Int {
+    /// - Parameter amount: The Fibonacci value.
+    /// - Returns: The index in the Fibonacci sequence that you want.
+    func getFibonacciIndex(afterValue amount: Int) -> Int {
         if amount < 5 {
             return amount
         }
         return Int((log(Double(amount) * sqrt(5) + 0.5) / log(1.61803398875)).rounded())
+    }
+
+    /// - Returns: The Fibonacci value at the index specified.
+    func getFibonacciValue(atIndex index: Int) -> Int {
+        if index < 5 {
+            // for small numbers just make it one more day.
+            return index + 1
+        }
+        if index > 15 {
+            // hard coded at a max of roughly 2.7 years
+            return 987
+        }
+        var fibs: [Int] = [1, 1]
+        if index >= 2 {
+            (2...index).forEach { i in
+                fibs.append(fibs[i - 1] + fibs[i - 2])
+            }
+        }
+        return fibs.last!
     }
 }

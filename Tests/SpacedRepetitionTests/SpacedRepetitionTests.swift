@@ -34,26 +34,26 @@ class SpacedRepetitionTests: XCTestCase {
 
     func testFibonacci() {
         let sut = SpacedRepetition(currentIncrementAmount: 1)
-        XCTAssertEqual(sut.fibonacci(0), 1)
-        XCTAssertEqual(sut.fibonacci(1), 2)
-        XCTAssertEqual(sut.fibonacci(2), 3)
-        XCTAssertEqual(sut.fibonacci(3), 4)
-        XCTAssertEqual(sut.fibonacci(4), 5)
-        XCTAssertEqual(sut.fibonacci(5), 8)
-        XCTAssertEqual(sut.fibonacci(6), 13)
-        XCTAssertEqual(sut.fibonacci(8), 34)
-        XCTAssertEqual(sut.fibonacci(15), 987)
-        XCTAssertEqual(sut.fibonacci(16), 987)
+        XCTAssertEqual(sut.getFibonacciValue(atIndex: 0), 1)
+        XCTAssertEqual(sut.getFibonacciValue(atIndex: 1), 2)
+        XCTAssertEqual(sut.getFibonacciValue(atIndex: 2), 3)
+        XCTAssertEqual(sut.getFibonacciValue(atIndex: 3), 4)
+        XCTAssertEqual(sut.getFibonacciValue(atIndex: 4), 5)
+        XCTAssertEqual(sut.getFibonacciValue(atIndex: 5), 8)
+        XCTAssertEqual(sut.getFibonacciValue(atIndex: 6), 13)
+        XCTAssertEqual(sut.getFibonacciValue(atIndex: 8), 34)
+        XCTAssertEqual(sut.getFibonacciValue(atIndex: 15), 987)
+        XCTAssertEqual(sut.getFibonacciValue(atIndex: 16), 987)
     }
 
     func testGetFibonacciIndex() {
         let sut = SpacedRepetition(currentIncrementAmount: 0)
-        XCTAssertEqual(sut.getFibonacciIndex(0), 0)
-        XCTAssertEqual(sut.getFibonacciIndex(1), 1)
-        XCTAssertEqual(sut.getFibonacciIndex(2), 2)
-        XCTAssertEqual(sut.getFibonacciIndex(3), 3)
-        XCTAssertEqual(sut.getFibonacciIndex(4), 4)
-        XCTAssertEqual(sut.getFibonacciIndex(5), 5)
-        XCTAssertEqual(sut.getFibonacciIndex(8), 6)
+        XCTAssertEqual(sut.getNextFibonacciIndex(fromValue: 0), 0)
+        XCTAssertEqual(sut.getNextFibonacciIndex(fromValue: 1), 1)
+        XCTAssertEqual(sut.getNextFibonacciIndex(fromValue: 2), 2)
+        XCTAssertEqual(sut.getNextFibonacciIndex(fromValue: 3), 3)
+        XCTAssertEqual(sut.getNextFibonacciIndex(fromValue: 4), 4)
+        XCTAssertEqual(sut.getNextFibonacciIndex(fromValue: 5), 5)
+        XCTAssertEqual(sut.getNextFibonacciIndex(fromValue: 8), 6)
     }
 }
