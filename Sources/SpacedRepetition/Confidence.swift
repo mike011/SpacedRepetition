@@ -12,5 +12,4 @@ public enum Confidence {
     case extremlyLow
     case low
     case medium
-    case high
 }

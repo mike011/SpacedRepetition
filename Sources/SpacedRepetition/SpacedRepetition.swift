@@ -18,8 +18,16 @@ class SpacedRepetition {
     }
 
     func handleRightAnswer(confidence: Confidence = .medium) -> Int {
-        let index = getFibonacciIndex(afterValue: incrementAmount)
-        incrementAmount = getFibonacciValue(atIndex: index)
+        switch confidence {
+        case .extremlyLow:
+            return incrementAmount
+        case .low:
+            incrementAmount += 1
+        case .medium:
+            let index = getFibonacciIndex(afterValue: incrementAmount)
+            let nextAmount = getFibonacciValue(atIndex: index)
+            incrementAmount = nextAmount
+        }
         return incrementAmount
     }
 

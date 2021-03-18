@@ -11,28 +11,49 @@ import XCTest
 
 class SpacedRepetitionTests: XCTestCase {
 
+    // MARK: - handleWrongAnswer
     func testWrongAnswer() {
         let sut = SpacedRepetition(currentIncrementAmount: 5)
         let date = sut.handleWrongAnswer()
         XCTAssertEqual(date, 0)
     }
 
+    // MARK: - handleRightAnswer
     func testRightAnswerNeverAnsweredQuestionBefore() {
         let sut = SpacedRepetition(currentIncrementAmount: 0)
         let date = sut.handleRightAnswer()
         XCTAssertEqual(date, 1)
     }
 
-    func testRightAnswerOneDay() {
+    func testRightAnswerExtremlyLowConfidence() {
         let sut = SpacedRepetition(currentIncrementAmount: 1)
-        XCTAssertEqual(sut.handleRightAnswer(), 2)
-        XCTAssertEqual(sut.handleRightAnswer(), 3)
-        XCTAssertEqual(sut.handleRightAnswer(), 4)
-        XCTAssertEqual(sut.handleRightAnswer(), 5)
-        XCTAssertEqual(sut.handleRightAnswer(), 8)
+        XCTAssertEqual(sut.handleRightAnswer(confidence: .extremlyLow), 1)
+        XCTAssertEqual(sut.handleRightAnswer(confidence: .extremlyLow), 1)
+        XCTAssertEqual(sut.handleRightAnswer(confidence: .extremlyLow), 1)
+        XCTAssertEqual(sut.handleRightAnswer(confidence: .extremlyLow), 1)
+        XCTAssertEqual(sut.handleRightAnswer(confidence: .extremlyLow), 1)
     }
 
-    func testFibonacci() {
+    func testRightAnswerLowConfidence() {
+        let sut = SpacedRepetition(currentIncrementAmount: 1)
+        XCTAssertEqual(sut.handleRightAnswer(confidence: .low), 2)
+        XCTAssertEqual(sut.handleRightAnswer(confidence: .low), 3)
+        XCTAssertEqual(sut.handleRightAnswer(confidence: .low), 4)
+        XCTAssertEqual(sut.handleRightAnswer(confidence: .low), 5)
+        XCTAssertEqual(sut.handleRightAnswer(confidence: .low), 6)
+    }
+
+    func testRightAnswerMediumConfidence() {
+        let sut = SpacedRepetition(currentIncrementAmount: 1)
+        XCTAssertEqual(sut.handleRightAnswer(confidence: .medium), 2)
+        XCTAssertEqual(sut.handleRightAnswer(confidence: .medium), 3)
+        XCTAssertEqual(sut.handleRightAnswer(confidence: .medium), 4)
+        XCTAssertEqual(sut.handleRightAnswer(confidence: .medium), 5)
+        XCTAssertEqual(sut.handleRightAnswer(confidence: .medium), 8)
+    }
+
+    // MARK: - getFibonacciValue
+    func testGetFibonacciValue() {
         let sut = SpacedRepetition(currentIncrementAmount: 1)
         XCTAssertEqual(sut.getFibonacciValue(atIndex: 0), 1)
         XCTAssertEqual(sut.getFibonacciValue(atIndex: 1), 2)
@@ -48,12 +69,12 @@ class SpacedRepetitionTests: XCTestCase {
 
     func testGetFibonacciIndex() {
         let sut = SpacedRepetition(currentIncrementAmount: 0)
-        XCTAssertEqual(sut.getNextFibonacciIndex(fromValue: 0), 0)
-        XCTAssertEqual(sut.getNextFibonacciIndex(fromValue: 1), 1)
-        XCTAssertEqual(sut.getNextFibonacciIndex(fromValue: 2), 2)
-        XCTAssertEqual(sut.getNextFibonacciIndex(fromValue: 3), 3)
-        XCTAssertEqual(sut.getNextFibonacciIndex(fromValue: 4), 4)
-        XCTAssertEqual(sut.getNextFibonacciIndex(fromValue: 5), 5)
-        XCTAssertEqual(sut.getNextFibonacciIndex(fromValue: 8), 6)
+        XCTAssertEqual(sut.getFibonacciIndex(afterValue: 0), 0)
+        XCTAssertEqual(sut.getFibonacciIndex(afterValue: 1), 1)
+        XCTAssertEqual(sut.getFibonacciIndex(afterValue: 2), 2)
+        XCTAssertEqual(sut.getFibonacciIndex(afterValue: 3), 3)
+        XCTAssertEqual(sut.getFibonacciIndex(afterValue: 4), 4)
+        XCTAssertEqual(sut.getFibonacciIndex(afterValue: 5), 5)
+        XCTAssertEqual(sut.getFibonacciIndex(afterValue: 8), 6)
     }
 }
