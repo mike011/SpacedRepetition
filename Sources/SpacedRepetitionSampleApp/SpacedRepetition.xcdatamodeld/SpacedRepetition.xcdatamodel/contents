@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14490.98" systemVersion="18D109" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D80" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Question" representedClassName="Question" syncable="YES" codeGenerationType="class">
-        <attribute name="incrementAmount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="lastTimeAnswered" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="nextTimeToAsk" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="question" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="timesAsked" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="timesCorrect" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="incrementAmountInSeconds" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="lastTimeAnswered" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="nextTimeToAsk" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="question" optional="YES" attributeType="String"/>
+        <attribute name="timesAsked" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="timesCorrect" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <elements>
-        <element name="Question" positionX="-63" positionY="-18" width="128" height="135"/>
+        <element name="Question" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

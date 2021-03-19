@@ -16,12 +16,12 @@ class QuestionTests: XCTestCase {
         let q = Question(title: "title",
                          answer: "42",
                          category: "c")
-        XCTAssertEqual(q.incrementAmount, 0)
+        XCTAssertEqual(q.incrementAmountInSeconds, 0)
         XCTAssertEqual(q.title, "title")
         XCTAssertEqual(q.category, "c")
         XCTAssertEqual(q.answer, "42")
         XCTAssertEqual(q.timesAsked, 0)
-        XCTAssertEqual(q.incrementAmount, 0)
+        XCTAssertEqual(q.incrementAmountInSeconds, 0)
         XCTAssertEqual(q.timesCorrect, 0)
     }
 
@@ -97,12 +97,12 @@ class QuestionTests: XCTestCase {
         coder.encode("42", forKey: "answer")
 
         let q = Question(coder: coder)
-        XCTAssertEqual(q.incrementAmount, 0)
+        XCTAssertEqual(q.incrementAmountInSeconds, 0)
         XCTAssertEqual(q.title, "t")
         XCTAssertEqual(q.category, "cat")
         XCTAssertEqual(q.answer, "42")
         XCTAssertEqual(q.timesAsked, 0)
-        XCTAssertEqual(q.incrementAmount, 0)
+        XCTAssertEqual(q.incrementAmountInSeconds, 0)
         XCTAssertEqual(q.timesCorrect, 0)
     }
 
@@ -141,7 +141,7 @@ class QuestionTests: XCTestCase {
         q.handleRightAnswer()
         XCTAssertEqual(q.timesAsked, 1)
         XCTAssertEqual(q.timesCorrect, 1)
-        XCTAssertEqual(q.incrementAmount, 1)
+        XCTAssertEqual(q.incrementAmountInSeconds, 1)
         XCTAssertNotNil(q.lastTimeAnswered)
         XCTAssertNotNil(q.nextTimeToAsk)
     }
@@ -152,7 +152,7 @@ class QuestionTests: XCTestCase {
         q.handleWrongAnswer()
         XCTAssertEqual(q.timesAsked, 1)
         XCTAssertEqual(q.timesCorrect, 0)
-        XCTAssertEqual(q.incrementAmount, 0)
+        XCTAssertEqual(q.incrementAmountInSeconds, 0)
         XCTAssertNotNil(q.lastTimeAnswered)
         XCTAssertNotNil(q.nextTimeToAsk)
     }
@@ -205,7 +205,7 @@ class QuestionTests: XCTestCase {
         description += "lastTimeAnswered=nil\t"
         description += "timesAsked=0\t"
         description += "timesCorrect=0\t"
-        description += "incrementAmount=0\t"
+        description += "incrementAmount=0.0\t"
         description += "nextTimeToAsk=nil"
         XCTAssertEqual(q.description, description)
 
@@ -216,7 +216,7 @@ class QuestionTests: XCTestCase {
         description += "lastTimeAnswered=nil\t"
         description += "timesAsked=0\t"
         description += "timesCorrect=0\t"
-        description += "incrementAmount=0\t"
+        description += "incrementAmount=0.0\t"
         description += "nextTimeToAsk=nil"
         XCTAssertEqual(q.description, description)
     }

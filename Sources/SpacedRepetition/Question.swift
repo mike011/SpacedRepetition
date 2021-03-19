@@ -29,8 +29,8 @@ public class Question: NSObject, NSCoding, Comparable {
     /// How many times has this question been answered correctly?
     public var timesCorrect: Int
 
-    /// How many days when answered correctly should it be to the next question?
-    var incrementAmount: Int
+    /// How much time when answered correctly should it be to the next question?
+    var incrementAmountInSeconds: TimeInterval
 
     /// When is the next time ask this question?
     var nextTimeToAsk: Date?
@@ -50,13 +50,13 @@ public class Question: NSObject, NSCoding, Comparable {
     }
 
     public init(title: String, answer: String? = nil, category: String? = nil) {
-        incrementAmount = 0
+        incrementAmountInSeconds = 0
         self.title = title
         self.category = category
         self.answer = answer
         timesAsked = 0
         timesCorrect = 0
-        spacedRepetition = SpacedRepetition(currentIncrementAmount: incrementAmount)
+        spacedRepetition = SpacedRepetition(currentIncrementAmount: incrementAmountInSeconds)
     }
 
     public required init(coder aDecoder: NSCoder) {
@@ -66,10 +66,10 @@ public class Question: NSObject, NSCoding, Comparable {
         lastTimeAnswered = aDecoder.decodeObject(forKey: .lastTimeAnswered) as? Date ?? nil
         timesAsked = aDecoder.decodeObject(forKey: .timesAsked) as? Int ?? 0
         timesCorrect = aDecoder.decodeObject(forKey: .timesCorrect) as? Int ?? 0
-        incrementAmount = aDecoder.decodeObject(forKey: .incrementAmount) as? Int ?? 0
+        incrementAmountInSeconds = aDecoder.decodeObject(forKey: .incrementAmount) as? TimeInterval ?? 0
         nextTimeToAsk = aDecoder.decodeObject(forKey: .nextTimeToAsk) as? Date ?? nil
 
-        spacedRepetition = SpacedRepetition(currentIncrementAmount: incrementAmount)
+        spacedRepetition = SpacedRepetition(currentIncrementAmount: incrementAmountInSeconds)
     }
 
     public func encode(with aCoder: NSCoder) {
@@ -79,7 +79,7 @@ public class Question: NSObject, NSCoding, Comparable {
         aCoder.encode(lastTimeAnswered, forKey: .lastTimeAnswered)
         aCoder.encode(timesAsked, forKey: .timesAsked)
         aCoder.encode(timesCorrect, forKey: .timesCorrect)
-        aCoder.encode(incrementAmount, forKey: .incrementAmount)
+        aCoder.encode(incrementAmountInSeconds, forKey: .incrementAmount)
         aCoder.encode(nextTimeToAsk, forKey: .nextTimeToAsk)
     }
 
@@ -91,21 +91,18 @@ public class Question: NSObject, NSCoding, Comparable {
         lastTimeAnswered = Date()
         timesAsked += 1
         timesCorrect += 1
-        incrementAmount = spacedRepetition.handleRightAnswer(confidence: confidence)
+        incrementAmountInSeconds = spacedRepetition.handleRightAnswer(confidence: confidence)
 
-        var dateComponent = DateComponents()
-        dateComponent.day = incrementAmount
-
-        if nextTimeToAsk == nil{
+        if nextTimeToAsk == nil {
             nextTimeToAsk = Date()
         }
-        nextTimeToAsk = Calendar.current.date(byAdding: dateComponent, to: nextTimeToAsk!)
+        nextTimeToAsk = nextTimeToAsk?.addingTimeInterval(incrementAmountInSeconds)
     }
 
     func handleWrongAnswer() {
         lastTimeAnswered = Date()
         timesAsked += 1
-        incrementAmount = spacedRepetition.handleWrongAnswer()
+        incrementAmountInSeconds = spacedRepetition.handleWrongAnswer()
         nextTimeToAsk = Date()
     }
 
@@ -154,7 +151,7 @@ extension Question {
         result += "lastTimeAnswered=\(String(describing: lastTimeAnswered))\t"
         result += "timesAsked=\(timesAsked)\t"
         result += "timesCorrect=\(timesCorrect)\t"
-        result += "incrementAmount=\(incrementAmount)\t"
+        result += "incrementAmount=\(incrementAmountInSeconds)\t"
         result += "nextTimeToAsk=\(String(describing: nextTimeToAsk))"
         return result
     }

@@ -11,29 +11,30 @@ import Foundation
 /// This class only handles calculating the next date as to when to ask a question.
 class SpacedRepetition {
 
-    private var incrementAmount: Int
+    private var incrementAmountInSeconds: TimeInterval
 
-    init(currentIncrementAmount: Int) {
-        self.incrementAmount = currentIncrementAmount
+    init(currentIncrementAmount: TimeInterval) {
+        self.incrementAmountInSeconds = currentIncrementAmount
     }
 
-    func handleRightAnswer(confidence: Confidence = .medium) -> Int {
+    func handleRightAnswer(confidence: Confidence = .medium) -> TimeInterval {
         switch confidence {
         case .extremlyLow:
-            return incrementAmount
+            return incrementAmountInSeconds
         case .low:
-            incrementAmount += 1
+            incrementAmountInSeconds += 1 /// Only adding one seconds!!!!!
         case .medium:
-            let index = getFibonacciIndex(afterValue: incrementAmount)
+            let intValue = Int(incrementAmountInSeconds)
+            let index = getFibonacciIndex(afterValue: intValue)
             let nextAmount = getFibonacciValue(atIndex: index)
-            incrementAmount = nextAmount
+            incrementAmountInSeconds = TimeInterval(nextAmount)
         }
-        return incrementAmount
+        return incrementAmountInSeconds
     }
 
-    func handleWrongAnswer() -> Int {
-        incrementAmount = 0
-        return incrementAmount
+    func handleWrongAnswer() -> TimeInterval {
+        incrementAmountInSeconds = 0
+        return incrementAmountInSeconds
     }
 
 
