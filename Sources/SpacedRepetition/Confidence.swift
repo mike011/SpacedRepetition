@@ -9,7 +9,6 @@ import Foundation
 
 /// How confident are you in the answer?
 public enum Confidence {
-    case extremlyLow
     case low
     case medium
 }

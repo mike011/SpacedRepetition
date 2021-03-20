@@ -16,12 +16,12 @@ class QuestionTests: XCTestCase {
         let q = Question(title: "title",
                          answer: "42",
                          category: "c")
-        XCTAssertEqual(q.incrementAmountInSeconds, 0)
+        XCTAssertEqual(q.incrementInSeconds, 0)
         XCTAssertEqual(q.title, "title")
         XCTAssertEqual(q.category, "c")
         XCTAssertEqual(q.answer, "42")
         XCTAssertEqual(q.timesAsked, 0)
-        XCTAssertEqual(q.incrementAmountInSeconds, 0)
+        XCTAssertEqual(q.incrementInSeconds, 0)
         XCTAssertEqual(q.timesCorrect, 0)
     }
 
@@ -97,12 +97,12 @@ class QuestionTests: XCTestCase {
         coder.encode("42", forKey: "answer")
 
         let q = Question(coder: coder)
-        XCTAssertEqual(q.incrementAmountInSeconds, 0)
+        XCTAssertEqual(q.incrementInSeconds, 0)
         XCTAssertEqual(q.title, "t")
         XCTAssertEqual(q.category, "cat")
         XCTAssertEqual(q.answer, "42")
         XCTAssertEqual(q.timesAsked, 0)
-        XCTAssertEqual(q.incrementAmountInSeconds, 0)
+        XCTAssertEqual(q.incrementInSeconds, 0)
         XCTAssertEqual(q.timesCorrect, 0)
     }
 
@@ -138,12 +138,15 @@ class QuestionTests: XCTestCase {
     // MARK: - right answer
     func testHandleRightAnswer() {
         let q = Question(title: "title")
-        q.handleRightAnswer()
+        let start = Date()
+        q.nextTimeToAsk = start
+        q.handleRightAnswer(confidence: .medium)
         XCTAssertEqual(q.timesAsked, 1)
         XCTAssertEqual(q.timesCorrect, 1)
-        XCTAssertEqual(q.incrementAmountInSeconds, 1)
+        XCTAssertEqual(q.incrementInSeconds, 120.0)
         XCTAssertNotNil(q.lastTimeAnswered)
         XCTAssertNotNil(q.nextTimeToAsk)
+        XCTAssertEqual(q.nextTimeToAsk?.timeIntervalSince(start), 120.0)
     }
 
     // MARK: - wrong answer
@@ -152,7 +155,7 @@ class QuestionTests: XCTestCase {
         q.handleWrongAnswer()
         XCTAssertEqual(q.timesAsked, 1)
         XCTAssertEqual(q.timesCorrect, 0)
-        XCTAssertEqual(q.incrementAmountInSeconds, 0)
+        XCTAssertEqual(q.incrementInSeconds, 0)
         XCTAssertNotNil(q.lastTimeAnswered)
         XCTAssertNotNil(q.nextTimeToAsk)
     }

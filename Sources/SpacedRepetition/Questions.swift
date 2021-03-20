@@ -35,7 +35,7 @@ public class Questions {
 
     /// Loads all the stored questions.
     private func loadAllQuestions(forCategory category: String?) {
-        // Hardcoded to using user defaults.
+        // Hardcoded to use user defaults.
         let defaults = UserDefaults.standard
         if let savedQuestions = defaults.object(forKey: "questions") as? Data {
             if var decodedQuestions = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(savedQuestions) as? [Question] {
@@ -99,8 +99,12 @@ public class Questions {
             return
         }
 
-        questionData[currentQuestionIndex].handleRightAnswer(confidence: confidence)
+        let currentQuestion = questionData[currentQuestionIndex]
+        currentQuestion.handleRightAnswer(confidence: confidence)
 
+        if currentQuestion.nextTimeToAsk != nil {
+            // how do I filter in questions that stil should be asked / filter out questions with a time period greater then one.
+        }
         questionData.remove(at: currentQuestionIndex)
         save()
     }
