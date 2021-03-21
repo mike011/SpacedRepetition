@@ -91,6 +91,9 @@ public class Questions {
     }
 
     public func getCurrentQuestion() -> Question? {
+        guard currentQuestionIndex < questionData.count else {
+            return nil
+        }
         return questionData[currentQuestionIndex]
     }
 

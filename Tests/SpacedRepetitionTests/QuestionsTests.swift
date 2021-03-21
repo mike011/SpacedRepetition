@@ -280,4 +280,9 @@ class QuestionsTests: XCTestCase {
         XCTAssertEqual(qs.getDataToPrint(), "")
     }
 
+    // MARK: - GetCurrentQuestion
+    func testGetcurrentQuestionWithNoQuestions() {
+        let qs = Questions()
+        XCTAssertNil(qs.getCurrentQuestion())
+    }
 }
