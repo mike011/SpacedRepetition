@@ -101,7 +101,7 @@ class QuestionsTests: XCTestCase {
 
     func testGetNextQuestionTwoQuestions() {
         let qs = Questions()
-        qs.add(questions: [Question(title: "one"),Question(title: "two")])
+        qs.add(questions: [Question(title: "one"), Question(title: "two")])
 
         let q = qs.getNextQuestion()
         XCTAssertNotNil(q)
@@ -158,9 +158,13 @@ class QuestionsTests: XCTestCase {
     func testNoQuestionsShouldBeShownIfAllQuestionsAreForFutureDates() {
 
         // By marking a question correct it's next date to show will be at a later date.
+        // Only if the question has been answered correctly more then 5 times.
         let qs = Questions()
         qs.add(questions: [Question(title: "one")])
-        qs.correctAnswer()
+        for i in 0..<5 {
+            qs.correctAnswer(confidence: .low)
+            XCTAssertNotNil(qs.getNextQuestion(), "failed at \(i)")
+        }
 
         let qs2 = Questions()
         let q = qs2.getNextQuestion()
@@ -173,9 +177,8 @@ class QuestionsTests: XCTestCase {
         one.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -1, to: Date())
 
         let two = Question(title: "two")
-        let three = Question(title: "three")
 
-        let qs = Questions(questions: [one,two,three])
+        let qs = Questions(questions: [one,two])
         qs.correctAnswer()
         let q = qs.getNextQuestion()
 
@@ -195,7 +198,7 @@ class QuestionsTests: XCTestCase {
         qs.correctAnswer()
         let q = qs.getNextQuestion()
 
-        XCTAssertEqual(q?.title, "one")
+        XCTAssertEqual(q?.title, "two")
     }
 
     // MARK: - saving questions
@@ -239,19 +242,26 @@ class QuestionsTests: XCTestCase {
     }
 
     // MARK: - correct answer
-    func testCorrectAnswer() {
+    func testCorrectAnswerOnce() {
         let qs = Questions()
         qs.add(questions: [Question(title: "one")])
         qs.correctAnswer()
 
         let q = qs.getNextQuestion()
-        XCTAssertNil(q)
+        XCTAssertNotNil(q)
 
-        let qs2 = Questions()
-        XCTAssertFalse(qs2.allQuestionData.isEmpty)
-        let q2 = qs2.allQuestionData[0]
-        XCTAssertEqual(q2.timesCorrect, 1)
-        XCTAssertNotNil(q2)
+    }
+
+    func atestCorrectAnswerOverThresholdForDay() {
+        let qs = Questions()
+        qs.add(questions: [Question(title: "one")])
+        for _ in 0..<3 {
+            XCTAssertNotNil(qs.getCurrentQuestion())
+            qs.correctAnswer()
+        }
+
+        let q = qs.getNextQuestion()
+        XCTAssertNil(q)
     }
 
     func testCorrectAnswerWithNoMoreQuestionsAvailable() {

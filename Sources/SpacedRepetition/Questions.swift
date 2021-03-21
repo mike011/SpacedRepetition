@@ -102,11 +102,11 @@ public class Questions {
         let currentQuestion = questionData[currentQuestionIndex]
         currentQuestion.handleRightAnswer(confidence: confidence)
 
-        if currentQuestion.nextTimeToAsk != nil {
-            // how do I filter in questions that stil should be asked / filter out questions with a time period greater then one.
+        if let next = currentQuestion.nextTimeToAsk,
+           next.isAfterToday() {
+            questionData.remove(at: currentQuestionIndex)
+            save()
         }
-        questionData.remove(at: currentQuestionIndex)
-        save()
     }
 
     public func wrongAnswer() {
@@ -128,7 +128,12 @@ public class Questions {
         if questionData.count > 1 {
             let nextTimeToAsk = questionData[0].nextTimeToAsk
             let possibleNextQuestions = questionData.filter { (q) -> Bool in
-                return q.nextTimeToAsk == nextTimeToAsk
+                guard let nextTime = q.nextTimeToAsk,
+                    let nextTimeToAsk = nextTimeToAsk else {
+                    return true
+                }
+                return nextTime.compare(nextTimeToAsk) == ComparisonResult.orderedDescending
+
             }
             if possibleNextQuestions.count > 1 {
                 newIndex = currentQuestionIndex

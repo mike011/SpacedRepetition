@@ -40,6 +40,7 @@ class SpacedRepetition {
 
     func handleWrongAnswer() -> TimeInterval {
         currentValue = 0
+        lessThenADay = true
         return TimeInterval(currentValue)
     }
 
