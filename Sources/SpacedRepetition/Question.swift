@@ -33,7 +33,7 @@ public class Question: NSObject, NSCoding, Comparable {
     var incrementInSeconds: TimeInterval
 
     /// When is the next time ask this question?
-    var nextTimeToAsk: Date?
+    public var nextTimeToAsk: Date?
 
     /// Handles getting the next time to ask a question.
     private var spacedRepetition: SpacedRepetition

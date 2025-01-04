@@ -6,26 +6,27 @@
 //  Copyright © 2019 charland. All rights reserved.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import SpacedRepetition
 
-class SpacedRepetitionTests: XCTestCase {
+@Suite struct SpacedRepetitionTests {
 
     // MARK: - handleWrongAnswer
-    func testWrongAnswer() {
+    @Test func wrongAnswer() {
         let sut = SpacedRepetition(currentValue: 5, newQuestion: true)
         let date = sut.handleWrongAnswer()
-        XCTAssertEqual(date, 0)
+        #expect(date == 0)
     }
 
     // MARK: - handleRightAnswer
-    func testRightAnswerNeverAnsweredQuestionBefore() {
+    @Test func rightAnswerNeverAnsweredQuestionBefore() {
         let sut = SpacedRepetition(currentValue: 0, newQuestion: true)
         let date = sut.handleRightAnswer()
-        XCTAssertEqual(date, 120.0)
+        #expect(date == 120.0)
     }
 
-    func testRightAnswerLowConfidence() {
+    @Test func rightAnswerLowConfidence() {
         let sut = SpacedRepetition(currentValue: 1, newQuestion: true)
         assertRightAnswer(sut: sut, confidence: .low, expected: 2, units: .minutes)
         assertRightAnswer(sut: sut, confidence: .low, expected: 3, units: .minutes)
@@ -41,7 +42,7 @@ class SpacedRepetitionTests: XCTestCase {
         assertRightAnswer(sut: sut, confidence: .low, expected: 21, units: .days)
     }
 
-    func testRightAnswerLowConfidenceNotANewQuestion() {
+    @Test func rightAnswerLowConfidenceNotANewQuestion() {
         let sut = SpacedRepetition(currentValue: 8, newQuestion: false)
         assertRightAnswer(sut: sut, confidence: .low, expected: 13, units: .days)
     }
@@ -54,12 +55,10 @@ class SpacedRepetitionTests: XCTestCase {
     fileprivate func assertRightAnswer(sut: SpacedRepetition,
                                        confidence: Confidence,
                                        expected: TimeInterval,
-                                       units: Units,
-                                       file: StaticString = #file,
-                                       line: UInt = #line) {
+                                       units: Units) {
         let actualInSeconds = sut.handleRightAnswer(confidence: confidence)
         let actual = getActual(from: actualInSeconds, units: units)
-        XCTAssertEqual(actual, expected, file: file, line: line)
+        #expect(actual == expected)
     }
 
     fileprivate func getActual(from actualInSeconds: TimeInterval, units: Units) -> TimeInterval {
@@ -73,7 +72,7 @@ class SpacedRepetitionTests: XCTestCase {
         return actual
     }
 
-    func testRightAnswerMediumConfidence() {
+    @Test func rightAnswerMediumConfidence() {
         let sut = SpacedRepetition(currentValue: 1, newQuestion: true)
         assertRightAnswer(sut: sut, confidence: .medium, expected: 3, units: .minutes)
         assertRightAnswer(sut: sut, confidence: .medium, expected: 5, units: .minutes)
@@ -84,28 +83,28 @@ class SpacedRepetitionTests: XCTestCase {
     }
 
     // MARK: - getFibonacciValue
-    func testGetFibonacciValue() {
+    @Test func getFibonacciValue() {
         let sut = SpacedRepetition(currentValue: 1, newQuestion: true)
-        XCTAssertEqual(sut.getFibonacciValue(atIndex: 0), 1)
-        XCTAssertEqual(sut.getFibonacciValue(atIndex: 1), 2)
-        XCTAssertEqual(sut.getFibonacciValue(atIndex: 2), 3)
-        XCTAssertEqual(sut.getFibonacciValue(atIndex: 3), 4)
-        XCTAssertEqual(sut.getFibonacciValue(atIndex: 4), 5)
-        XCTAssertEqual(sut.getFibonacciValue(atIndex: 5), 8)
-        XCTAssertEqual(sut.getFibonacciValue(atIndex: 6), 13)
-        XCTAssertEqual(sut.getFibonacciValue(atIndex: 8), 34)
-        XCTAssertEqual(sut.getFibonacciValue(atIndex: 15), 987)
-        XCTAssertEqual(sut.getFibonacciValue(atIndex: 16), 987) // max
+        #expect(sut.getFibonacciValue(atIndex: 0) == 1)
+        #expect(sut.getFibonacciValue(atIndex: 1) == 2)
+        #expect(sut.getFibonacciValue(atIndex: 2) == 3)
+        #expect(sut.getFibonacciValue(atIndex: 3) == 4)
+        #expect(sut.getFibonacciValue(atIndex: 4) == 5)
+        #expect(sut.getFibonacciValue(atIndex: 5) == 8)
+        #expect(sut.getFibonacciValue(atIndex: 6) == 13)
+        #expect(sut.getFibonacciValue(atIndex: 8) == 34)
+        #expect(sut.getFibonacciValue(atIndex: 15) == 987)
+        #expect(sut.getFibonacciValue(atIndex: 16) == 987) // max // max
     }
 
-    func testGetFibonacciIndex() {
+    @Test func getFibonacciIndex() {
         let sut = SpacedRepetition(currentValue: 0, newQuestion: true)
-        XCTAssertEqual(sut.getFibonacciIndex(afterValue: 0), 0)
-        XCTAssertEqual(sut.getFibonacciIndex(afterValue: 1), 1)
-        XCTAssertEqual(sut.getFibonacciIndex(afterValue: 2), 2)
-        XCTAssertEqual(sut.getFibonacciIndex(afterValue: 3), 3)
-        XCTAssertEqual(sut.getFibonacciIndex(afterValue: 4), 4)
-        XCTAssertEqual(sut.getFibonacciIndex(afterValue: 5), 5)
-        XCTAssertEqual(sut.getFibonacciIndex(afterValue: 8), 6)
+        #expect(sut.getFibonacciIndex(afterValue: 0) == 0)
+        #expect(sut.getFibonacciIndex(afterValue: 1) == 1)
+        #expect(sut.getFibonacciIndex(afterValue: 2) == 2)
+        #expect(sut.getFibonacciIndex(afterValue: 3) == 3)
+        #expect(sut.getFibonacciIndex(afterValue: 4) == 4)
+        #expect(sut.getFibonacciIndex(afterValue: 5) == 5)
+        #expect(sut.getFibonacciIndex(afterValue: 8) == 6)
     }
 }

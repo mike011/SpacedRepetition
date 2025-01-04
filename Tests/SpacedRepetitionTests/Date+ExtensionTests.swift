@@ -7,29 +7,29 @@
 
 import Foundation
 
-import XCTest
+import Testing
 @testable import SpacedRepetition
 
-class DateExtensionTests: XCTestCase {
+@Suite struct DateExtensionTests {
 
     // MARK: - isAfterToday
 
-    func testIsAfterTodayToday() {
-        XCTAssertFalse(Date().isAfterToday())
+    @Test func isAfterTodayToday() {
+        #expect(!Date().isAfterToday())
     }
 
-    func testIsAfterTodayTomorrow() {
+    @Test func isAfterTodayTomorrow() {
         let date = Date(timeIntervalSinceNow: 87000)
-        XCTAssertTrue(date.isAfterToday())
+        #expect(date.isAfterToday())
     }
 
-    func testIsAfterTodayYesterday() {
+    @Test func isAfterTodayYesterday() {
         let date = Date(timeIntervalSinceNow: -87000)
-        XCTAssertFalse(date.isAfterToday())
+        #expect(!date.isAfterToday())
     }
 
-    func testIsAfterTodayWayInTheFuture() {
+    @Test func isAfterTodayWayInTheFuture() {
         let date = Date(timeIntervalSinceNow: 8700000)
-        XCTAssertTrue(date.isAfterToday())
+        #expect(date.isAfterToday())
     }
 }

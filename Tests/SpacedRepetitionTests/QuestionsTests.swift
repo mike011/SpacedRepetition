@@ -6,18 +6,19 @@
 //  Copyright © 2019 charland. All rights reserved.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import SpacedRepetition
 
-class QuestionsTests: XCTestCase {
+@Suite struct QuestionsTests {
 
-    override func setUp() {
+    init() {
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: "questions")
     }
 
     // MARK: - init
-    func testInitAllQuestions() {
+    @Test func initAllQuestions() {
         let qs = Questions()
         var array1 = [Question]()
         array1.append(Question(title: "one", answer: nil, category: "c"))
@@ -30,10 +31,10 @@ class QuestionsTests: XCTestCase {
         qs.save()
 
         let qs2 = Questions()
-        XCTAssertEqual(qs2.questionData.count, 2)
+        #expect(qs2.questionData.count == 2)
     }
 
-    func testInitOnlySpecifiedCategory() {
+    @Test func initOnlySpecifiedCategory() {
         let qs = Questions()
         var array1 = [Question]()
         array1.append(Question(title: "one", answer: nil, category: "c"))
@@ -46,71 +47,71 @@ class QuestionsTests: XCTestCase {
         qs.save()
 
         let qs2 = Questions(forCategory: "c")
-        XCTAssertEqual(qs2.questionData.count, 1)
+        #expect(qs2.questionData.count == 1)
     }
 
     // MARK: - Adding
-    func testAddSameQuestionTwiceShouldOnlyBeAddedOnce() {
+    @Test func addSameQuestionTwiceShouldOnlyBeAddedOnce() {
         let qs = Questions()
         qs.add(question: Question(title: "one", answer: nil, category: "c"))
         qs.add(question: Question(title: "one", answer: nil, category: "c"))
-        XCTAssertEqual(qs.questionData.count, 1)
+        #expect(qs.questionData.count == 1)
     }
 
-    func testAddTwoQuestionsShouldBeTwoQuestions() {
+    @Test func addTwoQuestionsShouldBeTwoQuestions() {
         let qs = Questions()
         qs.add(question: Question(title: "one", answer: nil, category: "c"))
         qs.add(question: Question(title: "two", answer: nil, category: "c"))
-        XCTAssertEqual(qs.questionData.count, 2)
+        #expect(qs.questionData.count == 2)
     }
 
-    func testAddSameQuestionTwiceWithDifferentCategoryShouldBeTwoQuestions() {
+    @Test func addSameQuestionTwiceWithDifferentCategoryShouldBeTwoQuestions() {
         let qs = Questions()
         qs.add(question: Question(title: "one", answer: nil, category: "c"))
         qs.add(question: Question(title: "one", answer: nil, category: "d"))
-        XCTAssertEqual(qs.questionData.count, 2)
+        #expect(qs.questionData.count == 2)
     }
 
     // MARK: - sorting
-    func testAllQuestionsIsSorted() {
+    @Test func allQuestionsIsSorted() {
         let q1 = Question(title: "q1")
         let q2 = Question(title: "q2")
 
         var qs = [q2,q1]
         qs.sort()
 
-        XCTAssertEqual(qs[0].title, "q1")
-        XCTAssertEqual(qs[1].title, "q2")
+        #expect(qs[0].title == "q1")
+        #expect(qs[1].title == "q2")
     }
 
     // MARK: - getNextQuestion
-    func testGetNextQuestionNoQuestions() {
+    @Test func getNextQuestionNoQuestions() {
         let qs = Questions()
-        XCTAssertTrue(qs.questionData.isEmpty)
-        XCTAssertNil(qs.getNextQuestion())
+        #expect(qs.questionData.isEmpty)
+        #expect(qs.getNextQuestion() == nil)
     }
 
-    func testGetNextQuestionOneQuestion() {
+    @Test func getNextQuestionOneQuestion() {
         let qs = Questions()
         qs.add(questions: [Question(title: "one")])
 
         let q = qs.getNextQuestion()
-        XCTAssertNotNil(q)
-        XCTAssertEqual(q, qs.getNextQuestion())
+        #expect(q != nil)
+        #expect(q == qs.getNextQuestion())
     }
 
-    func testGetNextQuestionTwoQuestions() {
+    @Test func getNextQuestionTwoQuestions() {
         let qs = Questions()
         qs.add(questions: [Question(title: "one"), Question(title: "two")])
 
         let q = qs.getNextQuestion()
-        XCTAssertNotNil(q)
+        #expect(q != nil)
 
         let q2 = qs.getNextQuestion()
-        XCTAssertNotEqual(q, q2)
+        #expect(q != q2)
     }
 
-    func testGetCurrentQuestionFirstOneNeverAnswed() {
+    @Test func getCurrentQuestionFirstOneNeverAnswed() {
         let one = Question(title: "one")
 
         let two = Question(title: "two")
@@ -119,20 +120,20 @@ class QuestionsTests: XCTestCase {
         let qs = Questions(questions: [one,two])
 
         let q2 = qs.getCurrentQuestion()
-        XCTAssertEqual(q2?.title, "one")
+        #expect(q2?.title == "one")
     }
 
-    func testGetCurrentQuestionBothNeverAnswed() {
+    @Test func getCurrentQuestionBothNeverAnswed() {
         let one = Question(title: "one")
         let two = Question(title: "two")
 
         let qs = Questions(questions: [one,two])
 
         let q2 = qs.getCurrentQuestion()
-        XCTAssertEqual(q2?.title, "two")
+        #expect(q2?.title == "two")
     }
 
-    func testGetCurrentQuestionFirstOneAnsweredAndDue() {
+    @Test func getCurrentQuestionFirstOneAnsweredAndDue() {
         let one = Question(title: "one")
         one.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -1, to: Date())
 
@@ -140,10 +141,10 @@ class QuestionsTests: XCTestCase {
         let qs = Questions(questions: [one,two])
 
         let q2 = qs.getCurrentQuestion()
-        XCTAssertEqual(q2?.title, "two")
+        #expect(q2?.title == "two")
     }
 
-    func testGetCurrentQuestionTwoQuestionsFirstOneOlderShouldBeAskedFirst() {
+    @Test func getCurrentQuestionTwoQuestionsFirstOneOlderShouldBeAskedFirst() {
         let one = Question(title: "one")
         one.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -2, to: Date())
 
@@ -152,10 +153,10 @@ class QuestionsTests: XCTestCase {
 
         let qs = Questions(questions: [one,two])
         let q2 = qs.getCurrentQuestion()
-        XCTAssertEqual(q2?.title, "one")
+        #expect(q2?.title == "one")
     }
 
-    func testNoQuestionsShouldBeShownIfAllQuestionsAreForFutureDates() {
+    @Test func noQuestionsShouldBeShownIfAllQuestionsAreForFutureDates() {
 
         // By marking a question correct it's next date to show will be at a later date.
         // Only if the question has been answered correctly more then 5 times.
@@ -163,15 +164,15 @@ class QuestionsTests: XCTestCase {
         qs.add(questions: [Question(title: "one")])
         for i in 0..<5 {
             qs.correctAnswer(confidence: .low)
-            XCTAssertNotNil(qs.getNextQuestion(), "failed at \(i)")
+            #expect(qs.getNextQuestion() != nil, "failed at \(i)")
         }
 
         let qs2 = Questions()
         let q = qs2.getNextQuestion()
-        XCTAssertNil(q)
+        #expect(q == nil)
     }
 
-    func testUnansweredQuestionsShouldAlwaysBeShownFirst() {
+    @Test func unansweredQuestionsShouldAlwaysBeShownFirst() {
 
         let one = Question(title: "one")
         one.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -1, to: Date())
@@ -182,10 +183,10 @@ class QuestionsTests: XCTestCase {
         qs.correctAnswer()
         let q = qs.getNextQuestion()
 
-        XCTAssertEqual(q?.title, "two")
+        #expect(q?.title == "two")
     }
 
-    func testUnansweredQuestionsShouldAlwaysBeShownFirst2() {
+    @Test func unansweredQuestionsShouldAlwaysBeShownFirst2() {
 
         let one = Question(title: "one")
         one.nextTimeToAsk = Calendar.current.date(byAdding: .day, value: -1, to: Date())
@@ -198,41 +199,41 @@ class QuestionsTests: XCTestCase {
         qs.correctAnswer()
         let q = qs.getNextQuestion()
 
-        XCTAssertEqual(q?.title, "two")
+        #expect(q?.title == "two")
     }
 
     // MARK: - saving questions
-    func testSavingQuestion() {
+    @Test func savingQuestion() {
         let qs = Questions()
         qs.add(questions: [Question(title: "one")])
         qs.save()
 
         let qs2 = Questions()
-        XCTAssertEqual(qs2.questionData.count, 1)
+        #expect(qs2.questionData.count == 1)
     }
 
     // MARK: - wrong answer
-    func testWrongAnswer() {
+    @Test func wrongAnswer() {
         let qs = Questions()
         qs.add(questions: [Question(title: "one")])
         qs.wrongAnswer()
 
         let q = qs.getNextQuestion()
-        XCTAssertNotNil(q)
-        XCTAssertEqual(q?.timesCorrect, 0)
+        #expect(q != nil)
+        #expect(q?.timesCorrect == 0)
 
         let qs2 = Questions()
-        XCTAssertEqual(qs2.questionData.count, 1)
+        #expect(qs2.questionData.count == 1)
     }
 
-    func testNoQuestionLoaded() {
+    @Test func noQuestionLoaded() {
         let qs = Questions()
         qs.wrongAnswer()
         qs.correctAnswer()
         _ = qs.getNextQuestion()
     }
 
-    func testWrongAnswerWithNoMoreQuestionsAvailable() {
+    @Test func wrongAnswerWithNoMoreQuestionsAvailable() {
         let qs = Questions()
         qs.add(questions: [Question(title: "one")])
         qs.correctAnswer()
@@ -242,13 +243,13 @@ class QuestionsTests: XCTestCase {
     }
 
     // MARK: - correct answer
-    func testCorrectAnswerOnce() {
+    @Test func correctAnswerOnce() {
         let qs = Questions()
         qs.add(questions: [Question(title: "one")])
         qs.correctAnswer()
 
         let q = qs.getNextQuestion()
-        XCTAssertNotNil(q)
+        #expect(q != nil)
 
     }
 
@@ -256,15 +257,15 @@ class QuestionsTests: XCTestCase {
         let qs = Questions()
         qs.add(questions: [Question(title: "one")])
         for _ in 0..<3 {
-            XCTAssertNotNil(qs.getCurrentQuestion())
+            #expect(qs.getCurrentQuestion() != nil)
             qs.correctAnswer()
         }
 
         let q = qs.getNextQuestion()
-        XCTAssertNil(q)
+        #expect(q == nil)
     }
 
-    func testCorrectAnswerWithNoMoreQuestionsAvailable() {
+    @Test func correctAnswerWithNoMoreQuestionsAvailable() {
         let qs = Questions()
         qs.add(questions: [Question(title: "one")])
         qs.correctAnswer()
@@ -277,12 +278,12 @@ class QuestionsTests: XCTestCase {
     func skipNotReadytestPrintingOneQuestion() {
         let qs = Questions()
         qs.add(questions: [Question(title: "one")])
-        XCTAssertEqual(qs.getDataToPrint(), "")
+        #expect(qs.getDataToPrint() == "")
     }
 
     // MARK: - GetCurrentQuestion
-    func testGetcurrentQuestionWithNoQuestions() {
+    @Test func getcurrentQuestionWithNoQuestions() {
         let qs = Questions()
-        XCTAssertNil(qs.getCurrentQuestion())
+        #expect(qs.getCurrentQuestion() == nil)
     }
 }
