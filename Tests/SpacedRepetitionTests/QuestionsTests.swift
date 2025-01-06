@@ -13,13 +13,16 @@ import Testing
 @Suite struct QuestionsTests {
 
     init() {
-        let defaults = UserDefaults.standard
-        defaults.removeObject(forKey: "questions")
+        Self.cleanup(forKey: "questions")
     }
 
     // MARK: - init
     @Test func initAllQuestions() {
-        let qs = Questions()
+        let keyName = "initAllQuestions"
+        defer {
+            Self.cleanup(forKey: keyName)
+        }
+        let qs = Questions(keyName: keyName)
         var array1 = [Question]()
         array1.append(Question(title: "one", answer: nil, category: "c"))
 
@@ -30,12 +33,16 @@ import Testing
         qs.add(questions: array2)
         qs.save()
 
-        let qs2 = Questions()
+        let qs2 = Questions(keyName: keyName)
         #expect(qs2.questionData.count == 2)
     }
 
     @Test func initOnlySpecifiedCategory() {
-        let qs = Questions()
+        let keyName = "initAllQuestions"
+        defer {
+            Self.cleanup(forKey: keyName)
+        }
+        let qs = Questions(keyName: keyName)
         var array1 = [Question]()
         array1.append(Question(title: "one", answer: nil, category: "c"))
 
@@ -46,7 +53,7 @@ import Testing
         qs.add(questions: array2)
         qs.save()
 
-        let qs2 = Questions(forCategory: "c")
+        let qs2 = Questions(forCategory: "c", keyName: keyName)
         #expect(qs2.questionData.count == 1)
     }
 
@@ -204,11 +211,11 @@ import Testing
 
     // MARK: - saving questions
     @Test func savingQuestion() {
-        let qs = Questions()
+        let qs = Questions(keyName: "savingQuestion")
         qs.add(questions: [Question(title: "one")])
         qs.save()
 
-        let qs2 = Questions()
+        let qs2 = Questions(keyName: "savingQuestion")
         #expect(qs2.questionData.count == 1)
     }
 
@@ -286,4 +293,10 @@ import Testing
         let qs = Questions()
         #expect(qs.getCurrentQuestion() == nil)
     }
+
+    private static func cleanup(forKey keyName: String) {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: keyName)
+    }
+
 }

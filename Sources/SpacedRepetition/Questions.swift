@@ -20,15 +20,19 @@ import Foundation
 @available(OSX 10.13, *)
 public class Questions {
 
+    private let keyName: String
+    public static let defaultKeyName = "questions"
     public var questionData = [Question]()
     public var allQuestionData = [Question]()
     private var currentQuestionIndex = 0
 
-    public init(forCategory category: String? = nil) {
+    public init(forCategory category: String? = nil, keyName: String = Questions.defaultKeyName) {
+        self.keyName = keyName
         loadAllQuestions(forCategory: category)
     }
 
     init(questions: [Question]) {
+        self.keyName = Self.defaultKeyName
         allQuestionData = questions
         loadQuestions()
     }
@@ -37,7 +41,7 @@ public class Questions {
     private func loadAllQuestions(forCategory category: String?) {
         // Hardcoded to use user defaults.
         let defaults = UserDefaults.standard
-        if let savedQuestions = defaults.object(forKey: "questions") as? Data {
+        if let savedQuestions = defaults.object(forKey: keyName) as? Data {
             if var decodedQuestions = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(savedQuestions) as? [Question] {
                 decodedQuestions.sort()
                 allQuestionData = decodedQuestions.filter({
@@ -152,7 +156,7 @@ public class Questions {
     func save() {
         if let savedData = try? NSKeyedArchiver.archivedData(withRootObject: allQuestionData, requiringSecureCoding: false) {
             let defaults = UserDefaults.standard
-            defaults.set(savedData, forKey: "questions")
+            defaults.set(savedData, forKey: keyName)
         }
     }
 
